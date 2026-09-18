@@ -95,17 +95,19 @@
       background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
       z-index: -1;
       opacity: 0.5;
-      blur: 6px;
+      filter: blur(6px);
     }
 
     .brand-title {
       font-size: 20px;
       font-weight: 800;
       background: linear-gradient(90deg, #ffffff 30%, #c7d2fe 100%);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.3px;
     }
+
 
     .brand-sub {
       font-size: 12px;
