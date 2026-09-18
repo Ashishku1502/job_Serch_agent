@@ -852,7 +852,11 @@
       <button id="run-btn" class="btn-primary" onclick="triggerPipeline()">
         <span>🚀 Run AI Job Pipeline</span>
       </button>
+      <button id="sync-github-btn" class="btn-primary" style="background: linear-gradient(135deg, #24292e, #0f172a); border: 1px solid var(--border-color);" onclick="triggerGitHubSync()">
+        <span>🐙 Sync to GitHub</span>
+      </button>
     </div>
+
 
     <!-- Live Metric Counter Cards -->
     <div class="metrics-grid">
@@ -1305,7 +1309,32 @@ ashishku1502@gmail.com
         });
     }
 
+    function triggerGitHubSync() {
+      const btn = document.getElementById("sync-github-btn");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Syncing to GitHub...</span>`;
+      }
+      fetch('/api/sync_github', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>🐙 Sync to GitHub</span>`;
+          }
+          showToast(data.message || 'GitHub sync completed!');
+        })
+        .catch(err => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>🐙 Sync to GitHub</span>`;
+          }
+          showToast('GitHub sync completed/attempted.');
+        });
+    }
+
     // Init
+
     fetchLiveData();
     renderJobs();
     renderDrafts();

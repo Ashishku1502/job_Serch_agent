@@ -10,6 +10,8 @@ import os
 import subprocess
 import sys
 
+from github_helper import sync_output_folder_to_github
+
 PORT = 8000
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
@@ -61,8 +63,16 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps({"message": "Pipeline started successfully!"}).encode("utf-8"))
             return
+        elif self.path == "/api/sync_github":
+            sync_res = sync_output_folder_to_github(os.path.join(DIRECTORY, "output"))
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(sync_res).encode("utf-8"))
+            return
 
         self.send_error(404, "Endpoint not found")
+
 
 
 def start_server():

@@ -39,6 +39,8 @@ from google_drive_helper import (
     export_doc_as_pdf,
 )
 from gmail_helper import create_gmail_draft
+from github_helper import sync_output_folder_to_github
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -600,6 +602,13 @@ def run_pipeline() -> None:
         time.sleep(2)  # gentle rate limiting between applications
 
     logger.info("Pipeline complete. Processed %d job(s).", len(good_jobs))
+
+    try:
+        sync_res = sync_output_folder_to_github("output")
+        logger.info("GitHub Auto-Sync status: %s", sync_res.get("message"))
+    except Exception as exc:
+        logger.warning("GitHub Auto-Sync failed: %s", exc)
+
 
 
 if __name__ == "__main__":
