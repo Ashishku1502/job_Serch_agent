@@ -134,3 +134,36 @@ python server.py
 - `find_recruiter_email()` uses Hunter.io's domain search; if your n8n
   workflow used a different enrichment source, swap the request in that one
   function.
+
+## 🚀 Deployment Guide
+
+### 1. Deploy Web Dashboard to GitHub Pages (Automated Workflow)
+This repository includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that automatically deploys the Web Command Center Dashboard to GitHub Pages on every push to `main`.
+
+**To activate GitHub Pages:**
+1. Open your repository on GitHub: `https://github.com/Ashishku1502/job_Serch_agent`
+2. Go to **Settings** ➔ **Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+4. The deployment workflow will execute automatically and publish your live dashboard at:
+   `https://Ashishku1502.github.io/job_Serch_agent/`
+
+### 2. Deploy Automated Job Agent Service (Cloud / Server)
+To run the autonomous agent & dashboard continuously on a cloud server or local server:
+
+```bash
+# Option A: Run web dashboard server
+python server.py
+
+# Option B: Run background worker pipeline
+python main.py
+```
+
+### 3. GitHub Auto-Sync Setup
+Set your GitHub token in `.env` to enable headless automatic backup of all generated resumes and application drafts:
+
+```bash
+GITHUB_TOKEN=your_personal_access_token
+GITHUB_REPO=Ashishku1502/job_Serch_agent
+GITHUB_BRANCH=main
+```
+
