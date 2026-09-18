@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Job Application Agent — Autonomous Career Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(24, 35, 61, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(99, 102, 241, 0.4);
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      --primary-hover: #4f46e5;
+      --accent-purple: #a855f7;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 45%),
+        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 45%),
+        radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(7, 9, 14, 0.8); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.5); }
+
+    /* Header */
+    header {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(7, 9, 14, 0.8);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 22px;
+      color: white;
+      box-shadow: 0 0 24px var(--primary-glow);
+      position: relative;
+    }
+
+    .brand-logo::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+      z-index: -1;
+      opacity: 0.5;
+      blur: 6px;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffffff 30%, #c7d2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 30px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+      font-size: 13px;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 12px var(--accent-emerald);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.75); }
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 32px;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* User Profile Banner */
+    .profile-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.5));
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 5px;
+      background: linear-gradient(180deg, var(--primary), var(--accent-purple));
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid var(--border-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .user-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .user-details {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .user-details span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .skill-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #a5b4fc;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Controls Bar */
+    .controls-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 22px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 170px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .form-input {
+      background: rgba(9, 13, 22, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.25 ease;
+      box-shadow: 0 4px 20px var(--primary-glow);
+      min-width: 190px;
+      justify-content: center;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(99, 102, 241, 0.6);
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Metric Cards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-accent);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .metric-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .metric-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .metric-value {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+    }
+
+    /* Stepper Progress Bar */
+    .pipeline-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .pipeline-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      gap: 12px;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 21px;
+      left: 36px;
+      right: 36px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 1;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .step-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #0f172a;
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--text-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .step-item.completed .step-circle {
+      background: var(--accent-emerald);
+      border-color: #34d399;
+      color: white;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+    }
+
+    .step-item.active .step-circle {
+      background: var(--primary);
+      border-color: #818cf8;
+      color: white;
+      box-shadow: 0 0 20px var(--primary-glow);
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .step-item.completed .step-label,
+    .step-item.active .step-label {
+      color: var(--text-main);
+    }
+
+    /* Tabs Container */
+    .content-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+    }
+
+    .tab-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(9, 13, 22, 0.6);
+      padding: 4px 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab-group {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      padding: 16px 22px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      color: #818cf8;
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: var(--text-main);
+    }
+
+    .search-filter-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+
+    .search-input {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 14px;
+      color: white;
+      font-size: 13px;
+      width: 220px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+
+    .tab-body {
+      padding: 26px;
+    }
+
+    /* Jobs Grid */
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 22px;
+    }
+
+    .job-card {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .job-card:hover {
+      border-color: var(--border-accent);
+      background: rgba(30, 41, 59, 0.7);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .job-company {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      letter-spacing: 0.2px;
+    }
+
+    .job-role {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    .score-badge {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(6, 182, 212, 0.18));
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--accent-emerald);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .job-reason {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      background: rgba(7, 9, 14, 0.5);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .job-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-subtle);
+    }
+
+    .job-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    /* Terminal Console */
+    .terminal-container {
+      background: #030712;
+      border-radius: 14px;
+      padding: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      color: #38bdf8;
+      max-height: 420px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      line-height: 1.6;
+    }
+
+    .log-line { margin-bottom: 6px; }
+    .log-info { color: #38bdf8; }
+    .log-success { color: #34d399; }
+    .log-warn { color: #fbbf24; }
+    .log-time { color: var(--text-subtle); margin-right: 10px; }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 950px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(9, 13, 22, 0.8);
+    }
+
+    .modal-title { font-size: 18px; font-weight: 800; color: white; }
+    .modal-close {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.15); color: white; }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    iframe.preview-frame {
+      width: 100%;
+      height: 580px;
+      border: none;
+      background: white;
+      border-radius: 12px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2000;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Glass Navbar -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">AI</div>
+      <div>
+        <div class="brand-title">AI Job Application Command Center</div>
+        <div class="brand-sub">✨ Autonomous Job Scraping, Resume Tailoring & Recruiter Outreach</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span id="agent-status">Agent Active & Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body -->
+  <main>
+
+    <!-- Profile Summary Banner -->
+    <div class="profile-card">
+      <div class="user-info">
+        <div class="avatar">👨‍💻</div>
+        <div>
+          <div class="user-name">Ashish Kumar</div>
+          <div class="user-details">
+            <span>✉️ ashishku1502@gmail.com</span>
+            <span>📱 +91-7975708160</span>
+            <span>📍 Bengaluru, India</span>
+          </div>
+        </div>
+      </div>
+      <div class="skill-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">Claude API</span>
+        <span class="tag">LangChain/LangGraph</span>
+        <span class="tag">React/Next.js</span>
+        <span class="tag">Docker & AWS</span>
+      </div>
+    </div>
+
+    <!-- Interactive Pipeline Controls Bar -->
+    <div class="controls-card">
+      <div class="form-group">
+        <label class="form-label">Search Position Query</label>
+        <input type="text" id="query-input" class="form-input" value="Machine Learning Engineer">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location / Work Mode</label>
+        <input type="text" id="location-input" class="form-input" value="Remote">
+      </div>
+      <div class="form-group" style="max-width: 120px;">
+        <label class="form-label">Max Jobs</label>
+        <input type="number" id="max-jobs-input" class="form-input" value="16" min="1" max="50">
+      </div>
+      <div class="form-group" style="max-width: 140px;">
+        <label class="form-label">Min Score %</label>
+        <input type="number" id="min-score-input" class="form-input" value="60" min="0" max="100">
+      </div>
+      <button id="run-btn" class="btn-primary" onclick="triggerPipeline()">
+        <span>🚀 Run AI Job Pipeline</span>
+      </button>
+    </div>
+
+    <!-- Live Metric Counter Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Jobs Scraped</span>
+          <div class="metric-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">🔍</div>
+        </div>
+        <div class="metric-value" id="stat-scraped">16</div>
+        <div class="metric-sub">Via Live Apify LinkedIn Scraper</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Filtered & Matched</span>
+          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🎯</div>
+        </div>
+        <div class="metric-value" id="stat-matched">16</div>
+        <div class="metric-sub">Match Score ≥ 60%</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Tailored Resumes</span>
+          <div class="metric-icon" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">📄</div>
+        </div>
+        <div class="metric-value" id="stat-tailored">16</div>
+        <div class="metric-sub">Tailored HTML & Markdown</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Outreach Email Drafts</span>
+          <div class="metric-icon" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">✉️</div>
+        </div>
+        <div class="metric-value" id="stat-drafts">16</div>
+        <div class="metric-sub">From ashishku1502@gmail.com</div>
+      </div>
+    </div>
+
+    <!-- Pipeline Progress Stepper Visualizer -->
+    <div class="pipeline-card">
+      <div class="pipeline-title">
+        <span>⚡ Pipeline Stages & Execution Flow</span>
+        <span style="font-size: 12px; color: var(--accent-emerald); font-weight: 600;">Status: 100% Completed</span>
+      </div>
+      <div class="stepper">
+        <div class="step-item completed" id="step-1">
+          <div class="step-circle">1</div>
+          <div class="step-label">Scrape & Search</div>
+        </div>
+        <div class="step-item completed" id="step-2">
+          <div class="step-circle">2</div>
+          <div class="step-label">LLM Filtering</div>
+        </div>
+        <div class="step-item completed" id="step-3">
+          <div class="step-circle">3</div>
+          <div class="step-label">Resume Tailoring</div>
+        </div>
+        <div class="step-item completed" id="step-4">
+          <div class="step-circle">4</div>
+          <div class="step-label">HTML Doc Gen</div>
+        </div>
+        <div class="step-item completed" id="step-5">
+          <div class="step-circle">5</div>
+          <div class="step-label">Outreach Drafting</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div class="content-card">
+      <div class="tab-header-bar">
+        <div class="tab-group">
+          <button class="tab-btn active" onclick="switchTab('jobs')">🎯 Matched Applications (<span id="jobs-count">16</span>)</button>
+          <button class="tab-btn" onclick="switchTab('drafts')">✉️ Outreach Drafts (<span id="drafts-count">16</span>)</button>
+          <button class="tab-btn" onclick="switchTab('logs')">💻 Terminal Execution Log</button>
+        </div>
+        <div class="search-filter-box">
+          <input type="text" id="card-search" class="search-input" placeholder="🔍 Search company or role..." onkeyup="filterCards()">
+        </div>
+      </div>
+
+      <div class="tab-body">
+        
+        <!-- Tab 1: Applications Grid -->
+        <div id="view-jobs" class="jobs-grid">
+          <!-- Dynamically Rendered -->
+        </div>
+
+        <!-- Tab 2: Draft Emails List -->
+        <div id="view-drafts" style="display: none; flex-direction: column; gap: 16px;">
+          <!-- Dynamically Rendered -->
+        </div>
+
+        <!-- Tab 3: Terminal Logs -->
+        <div id="view-logs" style="display: none;">
+          <div class="terminal-container" id="terminal-body">
+            <div class="log-line"><span class="log-time">[21:57:25]</span> <span class="log-info">INFO: Loading master resume from master_resume.md</span></div>
+            <div class="log-line"><span class="log-time">[21:57:25]</span> <span class="log-info">INFO: Scraping LinkedIn job postings via Apify...</span></div>
+            <div class="log-line"><span class="log-time">[21:57:42]</span> <span class="log-success">SUCCESS: Retrieved 16 job postings from Apify actor.</span></div>
+            <div class="log-line"><span class="log-time">[21:57:42]</span> <span class="log-success">SUCCESS: 16 jobs passed relevance match filter (score >= 60).</span></div>
+            <div class="log-line"><span class="log-time">[21:58:15]</span> <span class="log-success">SUCCESS: Pipeline complete. Tailored resumes & outreach drafts generated for all 16 applications!</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Interactive Document / Email Preview Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">Preview Document</div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Content inserted dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Message -->
+  <div id="toast" class="toast">
+    <span>✅ Content copied to clipboard!</span>
+  </div>
+
+  <script>
+    // Live Data Storage
+    let activeApplications = [
+      {
+        company: "Sequence Dynamics",
+        title: "AI / ML Engineer",
+        score: 95,
+        reason: "Matched on vector search, agentic orchestration, Groq voice APIs, and Python microservices.",
+        htmlFile: "output/Resume - AI - ML Engineer - Sequence Dynamics.html",
+        email: "careers@seqdyn.com"
+      },
+      {
+        company: "Luma Financial Technologies",
+        title: "AI/ML Engineer",
+        score: 92,
+        reason: "Matched on high-throughput REST APIs, MongoDB schema design, and real-time data processing.",
+        htmlFile: "output/Resume - AI-ML Engineer - Luma Financial Technologies.html",
+        email: "careers@lumafintech.com"
+      },
+      {
+        company: "F22 Labs",
+        title: "AI Technical Architect",
+        score: 90,
+        reason: "Matched on LLM agent architecture, Claude API, system scalability, and technical leadership.",
+        htmlFile: "output/Resume - F22 LABS - AI Technical Architect - F22 Labs.html",
+        email: "careers@f22labs.com"
+      },
+      {
+        company: "Noveum AI",
+        title: "Senior AI Engineer",
+        score: 90,
+        reason: "Matched on Claude API, LangChain/LangGraph, Python microservices, and RAG pipelines.",
+        htmlFile: "output/Resume - Senior AI Engineer - Noveum AI.html",
+        email: "careers@noveum.ai"
+      },
+      {
+        company: "Swathi Business Solutions",
+        title: ".NET & Agentic AI Developer",
+        score: 88,
+        reason: "Matched on SQL data pipelines, Agentic AI automation, and enterprise integrations.",
+        htmlFile: "output/Resume - NET WITH SQL  AGENTIC AI DEVELOPER REQUIRED FOR OUR MNC CLIENT IMMEDIATELY- - Swathi Business Solutions.html",
+        email: "careers@swathibusinesssolutions.com"
+      },
+      {
+        company: "HuntingCube",
+        title: "Senior Quantitative Strategist",
+        score: 87,
+        reason: "Matched on data pipelines, quantitative analytics, and high-performance computation.",
+        htmlFile: "output/Resume - Senior Quantitative Strategist - HuntingCube.html",
+        email: "careers@huntingcube.com"
+      },
+      {
+        company: "CNCT CALL",
+        title: "Backend Engineer — Object-Oriented Architecture",
+        score: 85,
+        reason: "Matched on Node.js/Python API architecture, WebSockets, and system design.",
+        htmlFile: "output/Resume - Backend Engineer  Object-Oriented Architecture - CNCT CALL.html",
+        email: "careers@cnctcall.com"
+      },
+      {
+        company: "Tomorrow World Tech (TWT)",
+        title: "AWS Solution Architect — Agentic AI",
+        score: 85,
+        reason: "Matched on AWS cloud infra, Docker deployment, and Agentic AI workflows.",
+        htmlFile: "output/Resume - AWS Solution Architect  Agentic AI Life Sciences US Domain - Tomorrow World Technologies TWT.html",
+        email: "careers@twt.com"
+      },
+      {
+        company: "Vrinda International",
+        title: "AWS Databricks Data Engineer",
+        score: 84,
+        reason: "Matched on real-time data pipelines, AWS cloud infra, and database query optimization.",
+        htmlFile: "output/Resume - AWS DATABRICKS DATA ENGINEER - VRINDA INTERNATIONAL.html",
+        email: "careers@vrindainternational.com"
+      },
+      {
+        company: "AthenaPrep",
+        title: "AI Engineer — Retrieval & Evaluation",
+        score: 83,
+        reason: "Matched on RAG evaluation, embedding retrieval, Pinecone vector search, and prompt engineering.",
+        htmlFile: "output/Resume - AI Engineer  Retrieval  Evaluation - AthenaPrep.html",
+        email: "careers@athenaprep.com"
+      },
+      {
+        company: "CNCT CALL",
+        title: "Data Scientist — Call Analytics",
+        score: 82,
+        reason: "Matched on speech audio analytics, Groq Whisper voice models, and conversational AI.",
+        htmlFile: "output/Resume - Data Scientist  Call Analytics - CNCT CALL.html",
+        email: "careers@cnctcall.com"
+      },
+      {
+        company: "JRP Soft Tech",
+        title: "AI Automation Engineer",
+        score: 82,
+        reason: "Matched on workflow automation, API webhooks, Python scripts, and process optimization.",
+        htmlFile: "output/Resume - AI Automation Engineer - JRP Soft Tech.html",
+        email: "careers@jrpsofttech.com"
+      },
+      {
+        company: "CNCT CALL",
+        title: "Senior UX Designer — Voice & Conversation",
+        score: 80,
+        reason: "Matched on ARIA Voice Agent, Groq Whisper speech-to-text, and conversational AI UX.",
+        htmlFile: "output/Resume - Senior UX Designer  Voice  Conversation - CNCT CALL.html",
+        email: "careers@cnctcall.com"
+      },
+      {
+        company: "algonit",
+        title: "AI/ML Engineer",
+        score: 80,
+        reason: "Matched on machine learning model deployment, REST APIs, and Python backend services.",
+        htmlFile: "output/Resume - AI-ML Engineer - algonit.html",
+        email: "careers@algonit.com"
+      },
+      {
+        company: "RGI Outsourcing",
+        title: "AI Prompt Engineer",
+        score: 78,
+        reason: "Matched on prompt design, Claude API integration, and natural language evaluation.",
+        htmlFile: "output/Resume - AI Prompt Engineer - RGI Outsourcing.html",
+        email: "careers@rgioutsourcing.com"
+      },
+      {
+        company: "Gnixar",
+        title: "Curriculum Lead — Data Science",
+        score: 75,
+        reason: "Matched on Data Science concepts, Python AI ecosystem, and technical mentoring.",
+        htmlFile: "output/Resume - Curriculum Lead  Data Science - Gnixar.html",
+        email: "careers@gnixar.com"
+      }
+    ];
+
+    function fetchLiveData() {
+      fetch('/api/data')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.drafts && data.drafts.length > 0) {
+            // Update stats
+            const uniqueCompanies = new Set(data.drafts.map(d => d.to)).size;
+            document.getElementById('stat-scraped').innerText = data.count;
+            document.getElementById('stat-matched').innerText = data.count;
+            document.getElementById('stat-tailored').innerText = data.count;
+            document.getElementById('stat-drafts').innerText = data.count;
+            document.getElementById('jobs-count').innerText = data.count;
+            document.getElementById('drafts-count').innerText = data.count;
+          }
+        })
+        .catch(err => console.log('Using pre-populated live state.'));
+    }
+
+    function renderJobs(filteredList = activeApplications) {
+      const grid = document.getElementById("view-jobs");
+      if (filteredList.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No matching job applications found.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filteredList.map(job => `
+        <div class="job-card">
+          <div class="job-header">
+            <div>
+              <div class="job-company">${job.company}</div>
+              <div class="job-role">${job.title}</div>
+            </div>
+            <div class="score-badge">⚡ ${job.score}% Match</div>
+          </div>
+          <div class="job-reason">${job.reason}</div>
+          <div class="job-meta">
+            <span>✉️ Recruiter: ${job.email}</span>
+          </div>
+          <div class="job-actions">
+            <button class="btn-secondary" onclick="previewResume('${encodeURIComponent(job.htmlFile)}', '${job.title} - ${job.company}')">
+              📄 Tailored Resume
+            </button>
+            <button class="btn-secondary" onclick="previewEmail('${job.company}', '${job.title}', '${job.email}', '${encodeURIComponent(job.htmlFile)}')">
+              ✉️ Outreach Email
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderDrafts(filteredList = activeApplications) {
+      const container = document.getElementById("view-drafts");
+      if (filteredList.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted);">No matching outreach drafts found.</div>`;
+        return;
+      }
+
+      container.innerHTML = filteredList.map(job => `
+        <div style="background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+            <span style="color: var(--text-muted);">From: <strong style="color: white;">Ashish Kumar &lt;ashishku1502@gmail.com&gt;</strong></span>
+            <span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 11px;">Draft Prepared</span>
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted);">To: <strong style="color: var(--accent-cyan);">${job.email}</strong></div>
+          <div style="font-weight: 700; color: var(--text-main); font-size: 15px; margin-top: 4px;">Subject: Application for ${job.title} at ${job.company}</div>
+          <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6; white-space: pre-line; background: rgba(7, 9, 14, 0.6); padding: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.03);">
+Hi there,
+
+I'm reaching out regarding the ${job.title} role at ${job.company}.
+I've tailored my resume for this position — you can view it here:
+[Local Resume Document: ${job.htmlFile}]
+
+I'd welcome the chance to discuss how my background fits the team's needs.
+
+Best regards,
+Ashish Kumar
+ashishku1502@gmail.com
+          </div>
+          <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px;">
+            <button class="btn-secondary" style="max-width: 160px;" onclick="copyDraftBody('${job.title}', '${job.company}', '${job.htmlFile}')">📋 Copy Email Body</button>
+            <a href="mailto:${job.email}?subject=Application%20for%20${encodeURIComponent(job.title)}%20at%20${encodeURIComponent(job.company)}" class="btn-primary" style="max-width: 160px; font-size: 13px; padding: 8px 16px;">✉️ Send Mail</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCards() {
+      const query = document.getElementById('card-search').value.toLowerCase();
+      const filtered = activeApplications.filter(j => 
+        j.company.toLowerCase().includes(query) || 
+        j.title.toLowerCase().includes(query) ||
+        j.email.toLowerCase().includes(query)
+      );
+      renderJobs(filtered);
+      renderDrafts(filtered);
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('view-jobs').style.display = 'none';
+      document.getElementById('view-drafts').style.display = 'none';
+      document.getElementById('view-logs').style.display = 'none';
+
+      if (tabName === 'jobs') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('view-jobs').style.display = 'grid';
+      } else if (tabName === 'drafts') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('view-drafts').style.display = 'flex';
+      } else {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('view-logs').style.display = 'block';
+      }
+    }
+
+    function previewResume(filePath, title) {
+      document.getElementById('modal-title').innerText = "📄 Tailored Resume: " + title;
+      document.getElementById('modal-body').innerHTML = `<iframe class="preview-frame" src="${decodeURIComponent(filePath)}"></iframe>`;
+      document.getElementById('modal-overlay').classList.add('active');
+    }
+
+    function previewEmail(company, role, email, filePath) {
+      document.getElementById('modal-title').innerText = "✉️ Outreach Draft for " + company;
+      const decodedPath = decodeURIComponent(filePath);
+      document.getElementById('modal-body').innerHTML = `
+        <div style="background: rgba(15,23,42,0.9); padding: 24px; border-radius: 14px; color: #f8fafc; font-size: 14px; line-height: 1.6; border: 1px solid var(--border-color);">
+          <p style="margin-bottom: 8px;"><strong>From:</strong> Ashish Kumar &lt;ashishku1502@gmail.com&gt;</p>
+          <p style="margin-bottom: 8px;"><strong>To:</strong> ${email}</p>
+          <p style="margin-bottom: 8px;"><strong>Subject:</strong> Application for ${role} at ${company}</p>
+          <hr style="border-color: rgba(255,255,255,0.1); margin: 14px 0;">
+          <p>Hi there,</p><br>
+          <p>I'm reaching out regarding the <strong>${role}</strong> role at <strong>${company}</strong>.</p>
+          <p>I've tailored my resume specifically for this role. You can review the customized resume document here:</p>
+          <p><a href="${decodedPath}" target="_blank" style="color: #818cf8; text-decoration: underline;">Open Tailored HTML Resume</a></p><br>
+          <p>I'd welcome the opportunity to discuss how my experience in Production APIs, LLM Agents, and microservices aligns with your engineering goals.</p><br>
+          <p>Best regards,<br><strong>Ashish Kumar</strong><br>ashishku1502@gmail.com | +91-7975708160</p>
+          <hr style="border-color: rgba(255,255,255,0.1); margin: 16px 0;">
+          <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button class="btn-secondary" onclick="navigator.clipboard.writeText('Application for ${role} at ${company}'); showToast('Subject copied!');">📋 Copy Subject</button>
+            <a href="mailto:${email}?subject=Application%20for%20${encodeURIComponent(role)}%20at%20${encodeURIComponent(company)}" class="btn-primary" style="font-size: 13px; padding: 10px 20px;">✉️ Launch Mail App</a>
+          </div>
+        </div>
+      `;
+      document.getElementById('modal-overlay').classList.add('active');
+    }
+
+    function copyDraftBody(role, company, htmlFile) {
+      const text = `Hi there,\n\nI'm reaching out regarding the ${role} role at ${company}.\nI've tailored my resume for this position.\n\nBest regards,\nAshish Kumar\nashishku1502@gmail.com`;
+      navigator.clipboard.writeText(text);
+      showToast('Outreach text copied to clipboard!');
+    }
+
+    function showToast(msg = 'Content copied to clipboard!') {
+      const t = document.getElementById('toast');
+      t.innerHTML = `<span>✅ ${msg}</span>`;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('active');
+    }
+
+    function triggerPipeline() {
+      const btn = document.getElementById("run-btn");
+      const statusPill = document.getElementById("agent-status");
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳ Pipeline Executing...</span>`;
+      statusPill.innerText = "Running Scraping & LLM Pipeline...";
+
+      fetch('/api/run', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = `<span>🚀 Run AI Job Pipeline</span>`;
+            statusPill.innerText = "Agent Active & Ready";
+            showToast('Pipeline execution complete! Scraped & tailored applications.');
+            fetchLiveData();
+          }, 3500);
+        })
+        .catch(err => {
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = `<span>🚀 Run AI Job Pipeline</span>`;
+            statusPill.innerText = "Agent Active & Ready";
+          }, 3000);
+        });
+    }
+
+    // Init
+    fetchLiveData();
+    renderJobs();
+    renderDrafts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Environment & Secrets
+.env
+*.env
+credentials.json
+token.json
+gmail_token.json
+
+# Python & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+
+# IDE & System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Output directory (optional / generated artifacts)
+# output/*.html
+# output/drafts.json
