@@ -5,7 +5,45 @@ postings, filters them with an LLM, tailors your resume per job, generates a
 shareable Google Doc/PDF, finds a recruiter contact, and drafts an outreach
 email in Gmail.
 
+## 🔄 End-to-End Autonomous Workflow Diagram
+
+```mermaid
+flowchart TD
+    subgraph S1["1. Scrape & Search"]
+        A[Trigger Pipeline] --> B["📥 Download Master Resume<br/>(Google Drive / master_resume.md)"]
+        B --> C["🔍 Scrape LinkedIn Jobs<br/>(Apify Scraper API)"]
+    end
+
+    subgraph S2["2. Intelligent Filtering"]
+        C --> D["🤖 LLM Evaluation & Scoring<br/>(GPT-4o-mini)"]
+        D -->|Match Score >= Threshold| E["✅ Approved Job Postings"]
+        D -->|Match Score < Threshold| X["❌ Discarded"]
+    end
+
+    subgraph S3["3. Hyper-Personalization"]
+        E --> F["✍️ Tailor Resume per Job<br/>(GPT-4o)"]
+        F --> G["📄 HTML & Markdown Generation"]
+    end
+
+    subgraph S4["4. Document Generation"]
+        G --> H["☁️ Export to Google Docs / Drive<br/>(Shareable PDF/Doc URL)"]
+    end
+
+    subgraph S5["5. Enrichment & Outreach"]
+        H --> I["🔎 Recruiter Contact Lookup<br/>(Hunter.io API / Fallback)"]
+        I --> J["✉️ Create Gmail Outreach Draft<br/>(Personalized Body & Attachment)"]
+        J --> K["🐙 Auto-Sync to GitHub<br/>(github_helper.py API / Git CLI)"]
+    end
+
+    style A fill:#6366f1,color:#fff,stroke:#4338ca
+    style D fill:#8b5cf6,color:#fff,stroke:#6d28d9
+    style F fill:#ec4899,color:#fff,stroke:#be185d
+    style J fill:#10b981,color:#fff,stroke:#047857
+    style K fill:#24292e,color:#fff,stroke:#000
+```
+
 ## 🖥️ Web Command Center Dashboard UI Features
+
 
 The project includes an interactive, high-performance web dashboard served at `http://localhost:8000`:
 
