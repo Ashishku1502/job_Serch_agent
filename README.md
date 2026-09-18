@@ -5,7 +5,34 @@ postings, filters them with an LLM, tailors your resume per job, generates a
 shareable Google Doc/PDF, finds a recruiter contact, and drafts an outreach
 email in Gmail.
 
+## 🖥️ Web Command Center Dashboard UI Features
+
+The project includes an interactive, high-performance web dashboard served at `http://localhost:8000`:
+
+```bash
+# Launch the Web Command Center Dashboard
+python server.py
+```
+
+### Key UI Features:
+- 🎨 **Glassmorphism Dark-Mode Interface**: Premium control dashboard with smooth micro-animations, color-coded status pills, and responsive layout.
+- 🎛️ **Live Search Configuration Bar**: Easily adjust job search query (`Machine Learning Engineer`, etc.), location/work mode (`Remote`), max jobs limit, and minimum LLM match score threshold (e.g. `60%`).
+- 📊 **Real-Time Live Metrics Cards**: Instant counters tracking:
+  - 🔍 **Jobs Scraped** (via Apify LinkedIn Scraper)
+  - 🎯 **Filtered & Matched Jobs** (GPT-4o-mini evaluation)
+  - 📄 **Tailored Resumes Created** (HTML & Markdown)
+  - ✉️ **Outreach Drafts** (Personalized outreach to recruiter contacts)
+- ⚡ **Interactive Pipeline Visualizer**: Live stepper showing real-time state for all 5 stages of the autonomous application pipeline.
+- 📑 **Tabbed Command Center Views**:
+  - **Jobs Grid**: Displays match score badges, company tags, job summaries, and one-click preview buttons for tailored HTML resumes.
+  - **Outreach Email Drafts**: View recipient recruiter email, subject line, body text, with quick-action buttons (`Copy Subject`, `Copy Body`, `Launch Mail App`).
+  - **Live Execution Logs**: Stream of agent events and network responses.
+- 🚀 **One-Click Browser Actions**:
+  - **🚀 Run AI Job Pipeline**: Triggers full autonomous scraping, tailoring, and drafting directly from the browser UI.
+  - **🐙 Sync to GitHub**: One-click manual backup of all generated HTML resumes, cover letters, and `drafts.json` to GitHub (`github_helper.py`).
+
 ## File-to-node mapping
+
 
 | n8n node(s) | Python function | File |
 |---|---|---|
