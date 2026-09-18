@@ -23,8 +23,9 @@ load_dotenv()
 logger = logging.getLogger("github_helper")
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
-GITHUB_REPO = os.getenv("GITHUB_REPO", "Ashishku1502/ai_job_agent")  # e.g., 'username/repo'
+GITHUB_REPO = os.getenv("GITHUB_REPO", "Ashishku1502/job_Serch_agent")  # e.g., 'username/repo'
 GITHUB_BRANCH = os.getenv("GITHUB_BRANCH", "main")
+
 SENDER_NAME = os.getenv("SENDER_NAME", "Ashish Kumar")
 
 
