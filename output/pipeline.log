@@ -64,3 +64,13 @@ Pipeline Run Triggered at 2026-09-19 21:42:17
 2026-09-19 21:44:08,445 [INFO] Saved local HTML resume to: output\Resume - AI Automation Engineer - JRP Soft Tech.html
 2026-09-19 21:44:08,445 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
 2026-09-19 21:44:08,517 [INFO] Saved local draft email to: output\drafts.json
+2026-09-19 21:44:10,518 [INFO] Tailoring resume for: AWS Databricks Data Engineer at Vrinda International
+2026-09-19 21:44:10,529 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-09-19 21:44:10,533 [INFO] Saved local HTML resume to: output\Resume - AWS Databricks Data Engineer - Vrinda International.html
+2026-09-19 21:44:10,533 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-09-19 21:44:10,545 [INFO] Saved local draft email to: output\drafts.json
+2026-09-19 21:44:12,546 [INFO] Pipeline complete. Processed 8 job(s).
+2026-09-19 21:44:12,549 [INFO] Starting GitHub sync for 24 file(s) in output...
+2026-09-19 21:44:12,550 [INFO] GITHUB_TOKEN not set. Attempting sync via local Git CLI...
+2026-09-19 21:44:22,139 [INFO] Successfully pushed changes to GitHub via Git CLI.
+2026-09-19 21:44:22,140 [INFO] GitHub Auto-Sync status: Synced via Git CLI
