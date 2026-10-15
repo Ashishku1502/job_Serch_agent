@@ -74,3 +74,53 @@ Pipeline Run Triggered at 2026-09-19 21:42:17
 2026-09-19 21:44:12,550 [INFO] GITHUB_TOKEN not set. Attempting sync via local Git CLI...
 2026-09-19 21:44:22,139 [INFO] Successfully pushed changes to GitHub via Git CLI.
 2026-09-19 21:44:22,140 [INFO] GitHub Auto-Sync status: Synced via Git CLI
+
+==================================================
+Pipeline Run Triggered at 2026-10-15 19:49:51
+Config: Query='Machine Learning Engineer', Location='Remote', MaxJobs=16, MinScore=60
+==================================================
+2026-10-15 19:53:08,409 [INFO] Starting pipeline for query='Machine Learning Engineer', location='Remote', max_jobs=16, min_score=60
+2026-10-15 19:53:08,439 [INFO] Loading master resume from local file: master_resume.md
+2026-10-15 19:53:08,469 [INFO] Attempting Tier 1: Scraping LinkedIn jobs via Apify API...
+2026-10-15 19:53:10,663 [WARNING] Apify usage limit exceeded (status 403). Proceeding directly to Tier 2 live scraper.
+2026-10-15 19:53:10,664 [INFO] Attempting Tier 2: Real-time direct LinkedIn live scraper...
+2026-10-15 19:53:10,664 [INFO] Attempting direct live LinkedIn guest scraping for 'Machine Learning Engineer' in 'Remote'...
+2026-10-15 19:53:12,239 [WARNING] LinkedIn guest search returned status 429
+2026-10-15 19:53:12,244 [INFO] Using Tier 3 curated job postings fallback pool.
+2026-10-15 19:53:12,248 [INFO] Filtering 8 jobs...
+2026-10-15 19:53:12,248 [INFO] 8 jobs passed the filter (score >= 60).
+2026-10-15 19:53:12,249 [INFO] Tailoring resume for: Senior AI Agent Architect at Automation Cloud
+2026-10-15 19:53:14,309 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 19:53:14,320 [INFO] Saved local HTML resume to: output\Resume - Senior AI Agent Architect - Automation Cloud.html
+2026-10-15 19:53:14,322 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 19:53:14,359 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 19:53:16,359 [INFO] Tailoring resume for: AI / ML Engineer at Sequence Dynamics
+2026-10-15 19:53:16,382 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 19:53:16,412 [INFO] Saved local HTML resume to: output\Resume - AI - ML Engineer - Sequence Dynamics.html
+2026-10-15 19:53:16,412 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 19:53:16,648 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 19:53:18,649 [INFO] Tailoring resume for: Backend Engineer — Object-Oriented Architecture at CNCT CALL
+2026-10-15 19:53:18,680 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 19:53:18,732 [INFO] Saved local HTML resume to: output\Resume - Backend Engineer  Object-Oriented Architecture - CNCT CALL.html
+2026-10-15 19:53:18,732 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 19:53:18,778 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 19:53:20,779 [INFO] Tailoring resume for: Machine Learning Engineer at AI Innovations Inc
+2026-10-15 19:53:20,796 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 19:53:20,828 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer - AI Innovations Inc.html
+2026-10-15 19:53:20,828 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 19:53:20,893 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 19:53:22,896 [INFO] Tailoring resume for: AI Technical Architect at F22 Labs
+2026-10-15 19:53:22,924 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 19:53:22,981 [INFO] Saved local HTML resume to: output\Resume - AI Technical Architect - F22 Labs.html
+2026-10-15 19:53:22,981 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 19:53:23,023 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 19:53:25,024 [INFO] Tailoring resume for: Senior AI Engineer at Noveum AI
+2026-10-15 19:53:25,060 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 19:53:25,079 [INFO] Saved local HTML resume to: output\Resume - Senior AI Engineer - Noveum AI.html
+2026-10-15 19:53:25,079 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 19:53:25,102 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 19:53:27,104 [INFO] Tailoring resume for: AI Automation Engineer at JRP Soft Tech
+2026-10-15 19:53:27,137 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 19:53:27,187 [INFO] Saved local HTML resume to: output\Resume - AI Automation Engineer - JRP Soft Tech.html
+2026-10-15 19:53:27,188 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 19:53:27,222 [INFO] Saved local draft email to: output\drafts.json
