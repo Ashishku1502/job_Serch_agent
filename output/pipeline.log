@@ -757,3 +757,8 @@ NameError: name 'local_rel_path' is not defined
 [20:49:50] [AUTO-APPLY] Batch auto-applied to 22 positions with tailored resumes.
 [21:03:14] [AUTO-APPLY] Submitted application for AI/ML Engineer at algonit.
 [21:27:52] [AUTO-APPLY & EMAIL] Processed & applied to 31 positions and dispatched outreach emails.
+[21:36:07] [EMAIL-SEND] Dispatched outreach email for Machine Learning Engineer at videosdk.live.
+[21:36:14] [EMAIL-SEND] Dispatched outreach email for Senior Machine Learning Engineer at OREDATA.
+[21:36:15] [EMAIL-SEND] Dispatched outreach email for Machine Learning Engineer (Decision Engine) at Trusting Social.
+[21:36:17] [EMAIL-SEND] Dispatched outreach email for Machine Learning Engineer, Radar at Stripe.
+[21:36:19] [EMAIL-SEND] Dispatched outreach email for Machine Learning Engineer at Cimri.
