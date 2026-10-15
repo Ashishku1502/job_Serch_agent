@@ -34,15 +34,23 @@
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 45%),
-        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 45%),
-        radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
       background-attachment: fixed;
+      background-size: 200% 200%;
+      animation: aurora 15s ease infinite alternate;
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+    }
+
+    @keyframes aurora {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 100%; }
     }
 
     /* Scrollbar */
@@ -85,6 +93,12 @@
       color: white;
       box-shadow: 0 0 24px var(--primary-glow);
       position: relative;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
     }
 
     .brand-logo::after {
@@ -313,11 +327,28 @@
       min-width: 190px;
       justify-content: center;
       letter-spacing: 0.2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: skewX(-20deg);
+      transition: all 0.5s ease;
+    }
+
+    .btn-primary:hover::before {
+      left: 150%;
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(99, 102, 241, 0.6);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.7);
       background: linear-gradient(135deg, #4f46e5, #9333ea);
     }
 
@@ -574,15 +605,21 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      transition: all 0.25s ease;
+      transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
       position: relative;
+      animation: fadeIn 0.5s ease-out backwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .job-card:hover {
       border-color: var(--border-accent);
-      background: rgba(30, 41, 59, 0.7);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      background: rgba(30, 41, 59, 0.75);
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(99, 102, 241, 0.1);
     }
 
     .job-header {
@@ -1121,98 +1158,149 @@
       }
     ];
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function updateDashboardWithData(drafts) {
+      if (!Array.isArray(drafts) || drafts.length === 0) return;
+      activeApplications = drafts;
+      const count = drafts.length;
+      const uniqueCount = new Set(drafts.map(d => d.company)).size;
+
+      const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      setEl('stat-scraped', count);
+      setEl('stat-matched', count);
+      setEl('stat-tailored', count);
+      setEl('stat-drafts', count);
+      setEl('jobs-count', count);
+      setEl('drafts-count', count);
+
+      renderJobs();
+      renderDrafts();
+    }
+
     function fetchLiveData() {
       fetch('/api/data')
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error('API route not available');
+          return res.json();
+        })
         .then(data => {
           if (data && data.drafts && data.drafts.length > 0) {
-            // Update stats
-            const uniqueCompanies = new Set(data.drafts.map(d => d.to)).size;
-            document.getElementById('stat-scraped').innerText = data.count;
-            document.getElementById('stat-matched').innerText = data.count;
-            document.getElementById('stat-tailored').innerText = data.count;
-            document.getElementById('stat-drafts').innerText = data.count;
-            document.getElementById('jobs-count').innerText = data.count;
-            document.getElementById('drafts-count').innerText = data.count;
+            updateDashboardWithData(data.drafts);
           }
         })
-        .catch(err => console.log('Using pre-populated live state.'));
+        .catch(() => {
+          // Fallback to static output/drafts.json (for GitHub Pages deployment or offline mode)
+          fetch('output/drafts.json')
+            .then(res => res.json())
+            .then(drafts => {
+              if (Array.isArray(drafts) && drafts.length > 0) {
+                updateDashboardWithData(drafts);
+              }
+            })
+            .catch(() => console.log('Using pre-populated live state.'));
+        });
+    }
+
+    function fetchLogs() {
+      fetch('/api/logs')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.logs) {
+            const lines = data.logs.split('\n');
+            const formatted = lines.map(line => {
+              let logClass = 'log-info';
+              if (line.includes('ERROR') || line.includes('Failed') || line.includes('Exception') || line.includes('WARNING')) {
+                logClass = 'log-error';
+              } else if (line.includes('SUCCESS') || line.includes('Complete') || line.includes('Retrieved') || line.includes('Saved')) {
+                logClass = 'log-success';
+              }
+              return `<div class="log-line"><span class="${logClass}">${escapeHtml(line)}</span></div>`;
+            }).join('');
+            document.getElementById('terminal-body').innerHTML = formatted || `<div class="log-line"><span class="log-info">${escapeHtml(data.logs)}</span></div>`;
+          }
+        })
+        .catch(err => console.log('Logs only available in local server mode.'));
     }
 
     function renderJobs(filteredList = activeApplications) {
       const grid = document.getElementById("view-jobs");
+      if (!grid) return;
       if (filteredList.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No matching job applications found.</div>`;
         return;
       }
 
-      grid.innerHTML = filteredList.map(job => `
+      grid.innerHTML = filteredList.map(job => {
+        const cleanFile = (job.htmlFile || "output/master_resume.md").replace(/\\/g, '/');
+        const score = job.score || 85;
+        return `
         <div class="job-card">
           <div class="job-header">
             <div>
-              <div class="job-company">${job.company}</div>
-              <div class="job-role">${job.title}</div>
+              <div class="job-company">${escapeHtml(job.company)}</div>
+              <div class="job-role">${escapeHtml(job.title)}</div>
             </div>
-            <div class="score-badge">⚡ ${job.score}% Match</div>
+            <div class="score-badge">⚡ ${score}% Match</div>
           </div>
-          <div class="job-reason">${job.reason}</div>
+          <div class="job-reason">${escapeHtml(job.reason)}</div>
           <div class="job-meta">
-            <span>✉️ Recruiter: ${job.email}</span>
+            <span>✉️ Recruiter: ${escapeHtml(job.email)}</span>
           </div>
           <div class="job-actions">
-            <button class="btn-secondary" onclick="previewResume('${encodeURIComponent(job.htmlFile)}', '${job.title} - ${job.company}')">
+            <button class="btn-secondary" onclick="previewResume('${encodeURIComponent(cleanFile)}', '${escapeHtml(job.title)} - ${escapeHtml(job.company)}')">
               📄 Tailored Resume
             </button>
-            <button class="btn-secondary" onclick="previewEmail('${job.company}', '${job.title}', '${job.email}', '${encodeURIComponent(job.htmlFile)}')">
+            <button class="btn-secondary" onclick="previewEmail('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', '${escapeHtml(job.email)}', '${encodeURIComponent(cleanFile)}')">
               ✉️ Outreach Email
             </button>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function renderDrafts(filteredList = activeApplications) {
       const container = document.getElementById("view-drafts");
+      if (!container) return;
       if (filteredList.length === 0) {
         container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted);">No matching outreach drafts found.</div>`;
         return;
       }
 
-      container.innerHTML = filteredList.map(job => `
+      container.innerHTML = filteredList.map(job => {
+        const cleanFile = (job.htmlFile || "output/master_resume.md").replace(/\\/g, '/');
+        const subject = job.subject || `Ashish Kumar / ${job.title} Application — ${job.company}`;
+        const email = job.email || 'careers@company.com';
+        return `
         <div style="background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px;">
           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
             <span style="color: var(--text-muted);">From: <strong style="color: white;">Ashish Kumar &lt;ashishku1502@gmail.com&gt;</strong></span>
             <span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 11px;">Draft Prepared</span>
           </div>
-          <div style="font-size: 13px; color: var(--text-muted);">To: <strong style="color: var(--accent-cyan);">${job.email}</strong></div>
-          <div style="font-weight: 700; color: var(--text-main); font-size: 15px; margin-top: 4px;">Subject: Application for ${job.title} at ${job.company}</div>
+          <div style="font-size: 13px; color: var(--text-muted);">To: <strong style="color: var(--accent-cyan);">${escapeHtml(email)}</strong></div>
+          <div style="font-weight: 700; color: var(--text-main); font-size: 15px; margin-top: 4px;">Subject: ${escapeHtml(subject)}</div>
           <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6; white-space: pre-line; background: rgba(7, 9, 14, 0.6); padding: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.03);">
-Hi there,
-
-I'm reaching out regarding the ${job.title} role at ${job.company}.
-I've tailored my resume for this position — you can view it here:
-[Local Resume Document: ${job.htmlFile}]
-
-I'd welcome the chance to discuss how my background fits the team's needs.
-
-Best regards,
-Ashish Kumar
-ashishku1502@gmail.com
+${escapeHtml(job.body || `Hi there,\n\nI recently saw the opening for the ${job.title} position at ${job.company}. I've tailored my resume specifically for this role: [Local Resume: ${cleanFile}]\n\nBest regards,\nAshish Kumar\nashishku1502@gmail.com`)}
           </div>
           <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px;">
-            <button class="btn-secondary" style="max-width: 160px;" onclick="copyDraftBody('${job.title}', '${job.company}', '${job.htmlFile}')">📋 Copy Email Body</button>
-            <a href="mailto:${job.email}?subject=Application%20for%20${encodeURIComponent(job.title)}%20at%20${encodeURIComponent(job.company)}" class="btn-primary" style="max-width: 160px; font-size: 13px; padding: 8px 16px;">✉️ Send Mail</a>
+            <button class="btn-secondary" style="max-width: 170px;" onclick="copyDraftBody('${escapeHtml(job.title)}', '${escapeHtml(job.company)}', '${encodeURIComponent(cleanFile)}')">📋 Copy Email Body</button>
+            <a href="mailto:${escapeHtml(email)}?subject=${encodeURIComponent(subject)}" class="btn-primary" style="max-width: 160px; font-size: 13px; padding: 8px 16px; text-decoration: none; text-align: center;">✉️ Send Mail</a>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function filterCards() {
       const query = document.getElementById('card-search').value.toLowerCase();
       const filtered = activeApplications.filter(j => 
-        j.company.toLowerCase().includes(query) || 
-        j.title.toLowerCase().includes(query) ||
-        j.email.toLowerCase().includes(query)
+        (j.company || '').toLowerCase().includes(query) || 
+        (j.title || '').toLowerCase().includes(query) ||
+        (j.email || '').toLowerCase().includes(query)
       );
       renderJobs(filtered);
       renderDrafts(filtered);
@@ -1233,34 +1321,37 @@ ashishku1502@gmail.com
       } else {
         document.querySelectorAll('.tab-btn')[2].classList.add('active');
         document.getElementById('view-logs').style.display = 'block';
+        fetchLogs();
       }
     }
 
     function previewResume(filePath, title) {
       document.getElementById('modal-title').innerText = "📄 Tailored Resume: " + title;
-      document.getElementById('modal-body').innerHTML = `<iframe class="preview-frame" src="${decodeURIComponent(filePath)}"></iframe>`;
+      const cleanPath = decodeURIComponent(filePath).replace(/\\/g, '/');
+      document.getElementById('modal-body').innerHTML = `<iframe class="preview-frame" src="${cleanPath}"></iframe>`;
       document.getElementById('modal-overlay').classList.add('active');
     }
 
     function previewEmail(company, role, email, filePath) {
       document.getElementById('modal-title').innerText = "✉️ Outreach Draft for " + company;
-      const decodedPath = decodeURIComponent(filePath);
+      const cleanPath = decodeURIComponent(filePath).replace(/\\/g, '/');
+      const subject = `Ashish Kumar / ${role} Application — ${company}`;
       document.getElementById('modal-body').innerHTML = `
         <div style="background: rgba(15,23,42,0.9); padding: 24px; border-radius: 14px; color: #f8fafc; font-size: 14px; line-height: 1.6; border: 1px solid var(--border-color);">
           <p style="margin-bottom: 8px;"><strong>From:</strong> Ashish Kumar &lt;ashishku1502@gmail.com&gt;</p>
           <p style="margin-bottom: 8px;"><strong>To:</strong> ${email}</p>
-          <p style="margin-bottom: 8px;"><strong>Subject:</strong> Application for ${role} at ${company}</p>
+          <p style="margin-bottom: 8px;"><strong>Subject:</strong> ${subject}</p>
           <hr style="border-color: rgba(255,255,255,0.1); margin: 14px 0;">
           <p>Hi there,</p><br>
           <p>I'm reaching out regarding the <strong>${role}</strong> role at <strong>${company}</strong>.</p>
           <p>I've tailored my resume specifically for this role. You can review the customized resume document here:</p>
-          <p><a href="${decodedPath}" target="_blank" style="color: #818cf8; text-decoration: underline;">Open Tailored HTML Resume</a></p><br>
+          <p><a href="${cleanPath}" target="_blank" style="color: #818cf8; text-decoration: underline;">Open Tailored HTML Resume</a></p><br>
           <p>I'd welcome the opportunity to discuss how my experience in Production APIs, LLM Agents, and microservices aligns with your engineering goals.</p><br>
           <p>Best regards,<br><strong>Ashish Kumar</strong><br>ashishku1502@gmail.com | +91-7975708160</p>
           <hr style="border-color: rgba(255,255,255,0.1); margin: 16px 0;">
           <div style="display: flex; gap: 12px; justify-content: flex-end;">
-            <button class="btn-secondary" onclick="navigator.clipboard.writeText('Application for ${role} at ${company}'); showToast('Subject copied!');">📋 Copy Subject</button>
-            <a href="mailto:${email}?subject=Application%20for%20${encodeURIComponent(role)}%20at%20${encodeURIComponent(company)}" class="btn-primary" style="font-size: 13px; padding: 10px 20px;">✉️ Launch Mail App</a>
+            <button class="btn-secondary" onclick="navigator.clipboard.writeText('${subject}'); showToast('Subject copied!');">📋 Copy Subject</button>
+            <a href="mailto:${email}?subject=${encodeURIComponent(subject)}" class="btn-primary" style="font-size: 13px; padding: 10px 20px; text-decoration: none;">✉️ Launch Mail App</a>
           </div>
         </div>
       `;
@@ -1268,16 +1359,19 @@ ashishku1502@gmail.com
     }
 
     function copyDraftBody(role, company, htmlFile) {
-      const text = `Hi there,\n\nI'm reaching out regarding the ${role} role at ${company}.\nI've tailored my resume for this position.\n\nBest regards,\nAshish Kumar\nashishku1502@gmail.com`;
+      const cleanPath = decodeURIComponent(htmlFile).replace(/\\/g, '/');
+      const text = `Hi there,\n\nI'm reaching out regarding the ${role} role at ${company}.\nI've tailored my resume specifically for this position:\n[Resume: ${cleanPath}]\n\nBest regards,\nAshish Kumar\nashishku1502@gmail.com\n+91-7975708160`;
       navigator.clipboard.writeText(text);
       showToast('Outreach text copied to clipboard!');
     }
 
     function showToast(msg = 'Content copied to clipboard!') {
       const t = document.getElementById('toast');
-      t.innerHTML = `<span>✅ ${msg}</span>`;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3000);
+      if (t) {
+        t.innerHTML = `<span>✅ ${msg}</span>`;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3500);
+      }
     }
 
     function closeModal() {
@@ -1288,26 +1382,44 @@ ashishku1502@gmail.com
       const btn = document.getElementById("run-btn");
       const statusPill = document.getElementById("agent-status");
       btn.disabled = true;
-      btn.innerHTML = `<span>⏳ Pipeline Executing...</span>`;
-      statusPill.innerText = "Running Scraping & LLM Pipeline...";
+      btn.innerHTML = `<span>⏳ Running Pipeline...</span>`;
+      statusPill.innerText = "Scraping & Tailoring Jobs...";
 
-      fetch('/api/run', { method: 'POST' })
-        .then(res => res.json())
+      const query = document.getElementById("query-input") ? document.getElementById("query-input").value.trim() : "";
+      const location = document.getElementById("location-input") ? document.getElementById("location-input").value.trim() : "";
+      const maxJobs = document.getElementById("max-jobs-input") ? document.getElementById("max-jobs-input").value : "";
+      const minScore = document.getElementById("min-score-input") ? document.getElementById("min-score-input").value : "";
+
+      fetch('/api/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, location, max_jobs: maxJobs, min_score: minScore })
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Local server offline or static host');
+          return res.json();
+        })
         .then(data => {
-          setTimeout(() => {
-            btn.disabled = false;
-            btn.innerHTML = `<span>🚀 Run AI Job Pipeline</span>`;
-            statusPill.innerText = "Agent Active & Ready";
-            showToast('Pipeline execution complete! Scraped & tailored applications.');
+          showToast(`Pipeline launched for "${query || 'Machine Learning Engineer'}"! Scraping live jobs...`);
+          let checks = 0;
+          const pollInterval = setInterval(() => {
+            fetchLogs();
             fetchLiveData();
-          }, 3500);
+            checks++;
+            if (checks >= 8) {
+              clearInterval(pollInterval);
+              btn.disabled = false;
+              btn.innerHTML = `<span>🚀 Run AI Job Pipeline</span>`;
+              statusPill.innerText = "Agent Active & Ready";
+              showToast('Pipeline execution finished! Live applications updated.');
+            }
+          }, 2500);
         })
         .catch(err => {
-          setTimeout(() => {
-            btn.disabled = false;
-            btn.innerHTML = `<span>🚀 Run AI Job Pipeline</span>`;
-            statusPill.innerText = "Agent Active & Ready";
-          }, 3000);
+          btn.disabled = false;
+          btn.innerHTML = `<span>🚀 Run AI Job Pipeline</span>`;
+          statusPill.innerText = "Agent Active & Ready";
+          showToast('Server offline or running on static GitHub Pages. Run "Run_Dashboard.bat" locally.');
         });
     }
 
@@ -1336,10 +1448,10 @@ ashishku1502@gmail.com
     }
 
     // Init
-
     fetchLiveData();
     renderJobs();
     renderDrafts();
   </script>
 </body>
 </html>
+
