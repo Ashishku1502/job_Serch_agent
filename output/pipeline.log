@@ -754,3 +754,4 @@ NameError: name 'local_rel_path' is not defined
 2026-10-15 20:48:35,435 [INFO] GITHUB_TOKEN not set. Attempting sync via local Git CLI...
 2026-10-15 20:48:47,360 [INFO] Successfully pushed changes to GitHub via Git CLI.
 2026-10-15 20:48:47,360 [INFO] GitHub Auto-Sync status: Synced via Git CLI
+[20:49:50] [AUTO-APPLY] Batch auto-applied to 22 positions with tailored resumes.
