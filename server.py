@@ -13,6 +13,7 @@ import time
 import urllib.parse
 
 from github_helper import sync_output_folder_to_github
+from email_service import send_outreach_email
 
 PORT = 8000
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
@@ -78,6 +79,9 @@ def parse_drafts_data():
 
         applied = item.get("applied", False)
         applied_at = item.get("applied_at", "")
+        email_sent = item.get("email_sent", False)
+        email_sent_at = item.get("email_sent_at", "")
+        delivery_method = item.get("delivery_method", "")
 
         parsed_applications.append({
             "company": company,
@@ -91,7 +95,10 @@ def parse_drafts_data():
             "time": item.get("time", ""),
             "job_url": job_url,
             "applied": applied,
-            "applied_at": applied_at
+            "applied_at": applied_at,
+            "email_sent": email_sent,
+            "email_sent_at": email_sent_at,
+            "delivery_method": delivery_method
         })
 
     return parsed_applications
@@ -142,11 +149,13 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
             applications = parse_drafts_data()
             unique_companies = len(set(app["company"] for app in applications)) if applications else 0
             applied_count = sum(1 for app in applications if app.get("applied"))
+            emails_sent_count = sum(1 for app in applications if app.get("email_sent"))
             response_payload = {
                 "drafts": applications,
                 "count": len(applications),
                 "unique_companies": unique_companies,
                 "applied_count": applied_count,
+                "emails_sent_count": emails_sent_count,
                 "status": "active"
             }
             self.wfile.write(json.dumps(response_payload, ensure_ascii=False).encode("utf-8"))
@@ -275,6 +284,143 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
                 "status": "success",
                 "message": f"Successfully auto-applied to {updated_count} job application(s)!",
                 "applied_count": updated_count
+            }).encode("utf-8"))
+            return
+        elif path == "/api/send-mail":
+            content_length = int(self.headers.get("Content-Length", 0))
+            payload = {}
+            if content_length > 0:
+                try:
+                    body_bytes = self.rfile.read(content_length)
+                    payload = json.loads(body_bytes.decode("utf-8"))
+                except Exception:
+                    payload = {}
+
+            target_company = payload.get("company", "").strip().lower()
+            target_title = payload.get("title", "").strip().lower()
+            send_all = payload.get("send_all", False)
+
+            drafts_path = os.path.join(OUTPUT_DIR, "drafts.json")
+            sent_count = 0
+            results = []
+            if os.path.exists(drafts_path):
+                try:
+                    with open(drafts_path, "r", encoding="utf-8") as f:
+                        drafts = json.load(f)
+
+                    now_str = time.strftime("%Y-%m-%d %H:%M")
+                    for d in drafts:
+                        c_match = (not target_company) or (d.get("company", "").strip().lower() == target_company)
+                        t_match = (not target_title) or (d.get("title", "").strip().lower() == target_title)
+                        if send_all or (c_match and t_match):
+                            to_email = d.get("to") or d.get("email", "careers@company.com")
+                            subject = d.get("subject") or f"Application for {d.get('title')} at {d.get('company')}"
+                            body = d.get("body", "")
+                            resume_rel = d.get("htmlFile", "")
+                            resume_full = os.path.join(DIRECTORY, resume_rel) if resume_rel else None
+
+                            res = send_outreach_email(to_email, subject, body, resume_full)
+                            d["email_sent"] = True
+                            d["email_sent_at"] = now_str
+                            d["delivery_method"] = res.get("method", "Outbox")
+                            sent_count += 1
+                            results.append(res)
+                            if not send_all:
+                                break
+
+                    with open(drafts_path, "w", encoding="utf-8") as f:
+                        json.dump(drafts, f, indent=2, ensure_ascii=False)
+                except Exception as exc:
+                    self.send_error(500, f"Error processing email dispatch: {exc}")
+                    return
+
+            if os.path.exists(LOG_FILE):
+                try:
+                    with open(LOG_FILE, "a", encoding="utf-8", errors="replace") as log_f:
+                        if send_all:
+                            log_f.write(f"[{time.strftime('%H:%M:%S')}] [EMAIL-SEND] Dispatched outreach emails to {sent_count} recruiter contacts.\n")
+                        else:
+                            log_f.write(f"[{time.strftime('%H:%M:%S')}] [EMAIL-SEND] Dispatched outreach email for {payload.get('title')} at {payload.get('company')}.\n")
+                except Exception:
+                    pass
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_cors_headers()
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "status": "success",
+                "message": f"Successfully sent/dispatched {sent_count} outreach email(s)!",
+                "sent_count": sent_count,
+                "results": results[:5]
+            }).encode("utf-8"))
+            return
+        elif path == "/api/apply-and-send":
+            content_length = int(self.headers.get("Content-Length", 0))
+            payload = {}
+            if content_length > 0:
+                try:
+                    body_bytes = self.rfile.read(content_length)
+                    payload = json.loads(body_bytes.decode("utf-8"))
+                except Exception:
+                    payload = {}
+
+            target_company = payload.get("company", "").strip().lower()
+            target_title = payload.get("title", "").strip().lower()
+            apply_all = payload.get("apply_all", True)
+
+            drafts_path = os.path.join(OUTPUT_DIR, "drafts.json")
+            processed_count = 0
+            if os.path.exists(drafts_path):
+                try:
+                    with open(drafts_path, "r", encoding="utf-8") as f:
+                        drafts = json.load(f)
+
+                    now_str = time.strftime("%Y-%m-%d %H:%M")
+                    for d in drafts:
+                        c_match = (not target_company) or (d.get("company", "").strip().lower() == target_company)
+                        t_match = (not target_title) or (d.get("title", "").strip().lower() == target_title)
+                        if apply_all or (c_match and t_match):
+                            # Mark Applied
+                            d["applied"] = True
+                            d["applied_at"] = now_str
+
+                            # Dispatch Email
+                            to_email = d.get("to") or d.get("email", "careers@company.com")
+                            subject = d.get("subject") or f"Application for {d.get('title')} at {d.get('company')}"
+                            body = d.get("body", "")
+                            resume_rel = d.get("htmlFile", "")
+                            resume_full = os.path.join(DIRECTORY, resume_rel) if resume_rel else None
+
+                            res = send_outreach_email(to_email, subject, body, resume_full)
+                            d["email_sent"] = True
+                            d["email_sent_at"] = now_str
+                            d["delivery_method"] = res.get("method", "Outbox")
+                            processed_count += 1
+                            if not apply_all:
+                                break
+
+                    with open(drafts_path, "w", encoding="utf-8") as f:
+                        json.dump(drafts, f, indent=2, ensure_ascii=False)
+                except Exception as exc:
+                    self.send_error(500, f"Error processing auto-apply and send: {exc}")
+                    return
+
+            if os.path.exists(LOG_FILE):
+                try:
+                    with open(LOG_FILE, "a", encoding="utf-8", errors="replace") as log_f:
+                        log_f.write(f"[{time.strftime('%H:%M:%S')}] [AUTO-APPLY & EMAIL] Processed & applied to {processed_count} positions and dispatched outreach emails.\n")
+                except Exception:
+                    pass
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_cors_headers()
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "status": "success",
+                "message": f"Successfully auto-applied & sent outreach emails for {processed_count} job(s)!",
+                "processed_count": processed_count
             }).encode("utf-8"))
             return
         elif path == "/api/sync_github":

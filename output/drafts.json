@@ -13,7 +13,10 @@
     "email": "careers@videosdklive.com",
     "job_url": "https://in.linkedin.com/jobs/view/machine-learning-engineer-at-videosdk-live-4478046678",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@oredata.com",
@@ -29,7 +32,10 @@
     "email": "careers@oredata.com",
     "job_url": "https://tr.linkedin.com/jobs/view/senior-machine-learning-engineer-at-oredata-4478451850",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@trustingsocial.com",
@@ -45,7 +51,10 @@
     "email": "careers@trustingsocial.com",
     "job_url": "https://vn.linkedin.com/jobs/view/machine-learning-engineer-decision-engine-at-trusting-social-4465935996",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@stripe.com",
@@ -61,7 +70,10 @@
     "email": "careers@stripe.com",
     "job_url": "https://www.linkedin.com/jobs/view/machine-learning-engineer-radar-at-stripe-4476982356",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@cimri.com",
@@ -77,7 +89,10 @@
     "email": "careers@cimri.com",
     "job_url": "https://tr.linkedin.com/jobs/view/machine-learning-engineer-at-cimri-4467198072",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@noon.com",
@@ -93,7 +108,10 @@
     "email": "careers@noon.com",
     "job_url": "https://ae.linkedin.com/jobs/view/machine-learning-engineer-1-uae-national-at-noon-4476139667",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@newmindai.com",
@@ -109,7 +127,10 @@
     "email": "careers@newmindai.com",
     "job_url": "https://tr.linkedin.com/jobs/view/senior-machine-learning-engineer-at-newmind-ai-4476554763",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@bairesdev.com",
@@ -125,7 +146,10 @@
     "email": "careers@bairesdev.com",
     "job_url": "https://br.linkedin.com/jobs/view/machine-learning-engineer-python-remote-work-ref%23297202-at-bairesdev-4462084149",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@bairesdev.com",
@@ -141,7 +165,10 @@
     "email": "careers@bairesdev.com",
     "job_url": "https://pe.linkedin.com/jobs/view/machine-learning-engineer-python-remote-work-ref%23297197-at-bairesdev-4459064558",
     "applied": true,
-    "applied_at": "2026-10-15 21:10"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@vrindainternational.com",
@@ -157,7 +184,10 @@
     "email": "careers@vrindainternational.com",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AWS%20Databricks%20Data%20Engineer%20Vrinda%20International",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@jrpsofttech.com",
@@ -173,7 +203,10 @@
     "email": "careers@jrpsofttech.com",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AI%20Automation%20Engineer%20JRP%20Soft%20Tech",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@noveum.ai",
@@ -189,7 +222,10 @@
     "email": "careers@noveum.ai",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Senior%20AI%20Engineer%20Noveum%20AI",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@f22labs.com",
@@ -205,7 +241,10 @@
     "email": "careers@f22labs.com",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AI%20Technical%20Architect%20F22%20Labs",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@ai-innovations.com",
@@ -221,7 +260,10 @@
     "email": "careers@ai-innovations.com",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Machine%20Learning%20Engineer%20AI%20Innovations%20Inc",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@cnctcall.com",
@@ -237,7 +279,10 @@
     "email": "careers@cnctcall.com",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Backend%20Engineer%20%E2%80%94%20Object-Oriented%20Architecture%20CNCT%20CALL",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@seqdyn.com",
@@ -253,7 +298,10 @@
     "email": "careers@seqdyn.com",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AI%20/%20ML%20Engineer%20Sequence%20Dynamics",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "to": "careers@automationcloud.com",
@@ -269,7 +317,10 @@
     "email": "careers@automationcloud.com",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Senior%20AI%20Agent%20Architect%20Automation%20Cloud",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "De",
@@ -283,7 +334,10 @@
     "time": "Sat Sep 19 21:20:12 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Deltacubes%20-%20Technical%20Lead%20-%20Data%20Analytics%20De",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "Gnixar",
@@ -297,7 +351,10 @@
     "time": "Sat Sep 19 21:20:09 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Curriculum%20Lead%20%E2%80%94%20Data%20Science%20Gnixar",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "RGI Outsourcing",
@@ -311,7 +368,10 @@
     "time": "Sat Sep 19 21:20:07 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AI%20Prompt%20Engineer%20RGI%20Outsourcing",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "Propeter",
@@ -325,7 +385,10 @@
     "time": "Sat Sep 19 21:20:05 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=ML%20Engineer%20%E2%80%94%20Demand%20Forecasting%20Propeter",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "CNCT CALL",
@@ -339,7 +402,10 @@
     "time": "Sat Sep 19 21:20:01 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Data%20Scientist%20%E2%80%94%20Call%20Analytics%20CNCT%20CALL",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "CNCT CALL",
@@ -353,7 +419,10 @@
     "time": "Sat Sep 19 21:19:57 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Senior%20UX%20Designer%20%E2%80%94%20Voice%20%26%20Conversation%20CNCT%20CALL",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "AthenaPrep",
@@ -367,7 +436,10 @@
     "time": "Sat Sep 19 21:19:55 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AI%20Engineer%20%E2%80%94%20Retrieval%20%26%20Evaluation%20AthenaPrep",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "Tomorrow World Technologies (TWT)",
@@ -381,7 +453,10 @@
     "time": "Sat Sep 19 21:19:51 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AWS%20Solution%20Architect%20%E2%80%93%20Agentic%20AI%20%28Life%20Sciences%2C%20US%20Domain%29%20Tomorrow%20World%20Technologies%20%28TWT%29",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "Luma Financial Technologies",
@@ -395,7 +470,10 @@
     "time": "Sat Sep 19 21:19:42 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AI/ML%20Engineer%20Luma%20Financial%20Technologies",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "F22 Labs",
@@ -409,7 +487,10 @@
     "time": "Sat Sep 19 21:19:40 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=F22%20LABS%20-%20AI%20Technical%20Architect%20F22%20Labs",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "Swathi Business Solutions",
@@ -423,7 +504,10 @@
     "time": "Sat Sep 19 21:19:38 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=.NET%20WITH%20SQL%20%26%20AGENTIC%20AI%20DEVELOPER%20REQUIRED%20FOR%20OUR%20MNC%20CLIENT%20IMMEDIATELY%3A-%20Swathi%20Business%20Solutions",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "HuntingCube",
@@ -437,7 +521,10 @@
     "time": "Sat Sep 19 21:19:36 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=Senior%20Quantitative%20Strategist%20HuntingCube",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "カサナレ株式会社",
@@ -451,7 +538,10 @@
     "time": "Sat Sep 19 21:19:31 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=%E3%80%90%E5%AE%8C%E5%85%A8%E3%83%95%E3%83%AB%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%88%E3%80%91%E7%94%9F%E6%88%90AI%E3%83%90%E3%83%83%E3%82%AF%E3%82%A8%E3%83%B3%E3%83%89%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%20/%20%E3%83%86%E3%83%83%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%89%E5%80%99%E8%A3%9C%EF%BC%88L2-L3%EF%BC%89%20%E3%82%AB%E3%82%B5%E3%83%8A%E3%83%AC%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BE",
     "applied": true,
-    "applied_at": "2026-10-15 20:49"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   },
   {
     "company": "algonit",
@@ -465,6 +555,9 @@
     "time": "Fri Sep 18 22:38:47 2026",
     "job_url": "https://www.linkedin.com/jobs/search/?keywords=AI/ML%20Engineer%20algonit",
     "applied": true,
-    "applied_at": "2026-10-15 21:03"
+    "applied_at": "2026-10-15 21:27",
+    "email_sent": true,
+    "email_sent_at": "2026-10-15 21:27",
+    "delivery_method": "Outbox Dispatched"
   }
 ]

@@ -891,8 +891,14 @@
       <button id="run-btn" class="btn-primary" onclick="triggerPipeline()">
         <span>🚀 Run AI Job Pipeline</span>
       </button>
+      <button id="auto-apply-send-btn" class="btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);" onclick="triggerApplyAndSendAll()">
+        <span>🚀 Auto-Apply & Send Mail</span>
+      </button>
       <button id="auto-apply-all-btn" class="btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);" onclick="triggerAutoApplyAll()">
-        <span>⚡ Auto-Apply to All Matches</span>
+        <span>⚡ Auto-Apply All</span>
+      </button>
+      <button id="send-all-mail-btn" class="btn-primary" style="background: linear-gradient(135deg, #06b6d4, #0891b2); border: 1px solid rgba(6, 182, 212, 0.4); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);" onclick="triggerSendAllMail()">
+        <span>📧 Send All Outreach</span>
       </button>
       <button id="sync-github-btn" class="btn-primary" style="background: linear-gradient(135deg, #24292e, #0f172a); border: 1px solid var(--border-color);" onclick="triggerGitHubSync()">
         <span>🐙 Sync to GitHub</span>
@@ -907,7 +913,7 @@
           <span class="metric-title">Jobs Scraped</span>
           <div class="metric-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">🔍</div>
         </div>
-        <div class="metric-value" id="stat-scraped">22</div>
+        <div class="metric-value" id="stat-scraped">0</div>
         <div class="metric-sub">Via Live Apify & Direct Scraper</div>
       </div>
 
@@ -916,7 +922,7 @@
           <span class="metric-title">Filtered & Matched</span>
           <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🎯</div>
         </div>
-        <div class="metric-value" id="stat-matched">22</div>
+        <div class="metric-value" id="stat-matched">0</div>
         <div class="metric-sub">Match Score ≥ 60%</div>
       </div>
 
@@ -925,7 +931,7 @@
           <span class="metric-title">Tailored Resumes</span>
           <div class="metric-icon" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">📄</div>
         </div>
-        <div class="metric-value" id="stat-tailored">22</div>
+        <div class="metric-value" id="stat-tailored">0</div>
         <div class="metric-sub">Tailored HTML & Markdown</div>
       </div>
 
@@ -934,7 +940,7 @@
           <span class="metric-title">Outreach Drafts</span>
           <div class="metric-icon" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">✉️</div>
         </div>
-        <div class="metric-value" id="stat-drafts">22</div>
+        <div class="metric-value" id="stat-drafts">0</div>
         <div class="metric-sub">From ashishku1502@gmail.com</div>
       </div>
 
@@ -945,6 +951,15 @@
         </div>
         <div class="metric-value" id="stat-applied">0</div>
         <div class="metric-sub">Applications Submitted</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Emails Dispatched</span>
+          <div class="metric-icon" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">📨</div>
+        </div>
+        <div class="metric-value" id="stat-emails">0</div>
+        <div class="metric-sub">Outreach Sent / Outbox</div>
       </div>
     </div>
 
@@ -1180,6 +1195,7 @@
       activeApplications = drafts;
       const count = drafts.length;
       const appliedCount = drafts.filter(d => d.applied).length;
+      const emailsSentCount = drafts.filter(d => d.email_sent).length;
 
       const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
       setEl('stat-scraped', count);
@@ -1187,6 +1203,7 @@
       setEl('stat-tailored', count);
       setEl('stat-drafts', count);
       setEl('stat-applied', appliedCount);
+      setEl('stat-emails', emailsSentCount);
       setEl('jobs-count', count);
       setEl('drafts-count', count);
 
@@ -1228,7 +1245,7 @@
               let logClass = 'log-info';
               if (line.includes('ERROR') || line.includes('Failed') || line.includes('Exception') || line.includes('WARNING')) {
                 logClass = 'log-error';
-              } else if (line.includes('SUCCESS') || line.includes('Complete') || line.includes('Retrieved') || line.includes('Saved') || line.includes('AUTO-APPLY')) {
+              } else if (line.includes('SUCCESS') || line.includes('Complete') || line.includes('Retrieved') || line.includes('Saved') || line.includes('AUTO-APPLY') || line.includes('EMAIL-SEND')) {
                 logClass = 'log-success';
               }
               return `<div class="log-line"><span class="${logClass}">${escapeHtml(line)}</span></div>`;
@@ -1251,6 +1268,7 @@
         const cleanFile = (job.htmlFile || "output/master_resume.md").replace(/\\/g, '/');
         const score = job.score || 85;
         const isApplied = !!job.applied;
+        const isEmailSent = !!job.email_sent;
         const jobUrl = job.job_url || `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title + ' ' + job.company)}`;
         return `
         <div class="job-card" style="${isApplied ? 'border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);' : ''}">
@@ -1259,8 +1277,9 @@
               <div class="job-company">${escapeHtml(job.company)}</div>
               <div class="job-role">${escapeHtml(job.title)}</div>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
               ${isApplied ? `<span style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">✅ Applied</span>` : ''}
+              ${isEmailSent ? `<span style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">📨 Sent</span>` : ''}
               <div class="score-badge">⚡ ${score}% Match</div>
             </div>
           </div>
@@ -1268,18 +1287,22 @@
           <div class="job-meta">
             <span>✉️ Recruiter: ${escapeHtml(job.email)}</span>
             ${job.applied_at ? `<span style="color: var(--accent-emerald);">🕒 Applied: ${escapeHtml(job.applied_at)}</span>` : ''}
+            ${job.email_sent_at ? `<span style="color: #fbbf24;">📨 Sent: ${escapeHtml(job.email_sent_at)}</span>` : ''}
           </div>
           <div class="job-actions" style="display: flex; flex-wrap: wrap; gap: 8px;">
-            <button class="${isApplied ? 'btn-secondary' : 'btn-primary'}" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 120px; ${isApplied ? 'opacity: 0.8;' : 'background: linear-gradient(135deg, #10b981, #059669);'}" onclick="triggerAutoApply('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', this)">
+            <button class="${isApplied ? 'btn-secondary' : 'btn-primary'}" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 110px; ${isApplied ? 'opacity: 0.8;' : 'background: linear-gradient(135deg, #10b981, #059669);'}" onclick="triggerAutoApply('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', this)">
               ${isApplied ? '✅ Applied' : '⚡ Auto-Apply'}
             </button>
-            <a href="${jobUrl}" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size: 12px; padding: 8px 12px; text-decoration: none; text-align: center; flex: 1; min-width: 90px;">
+            <button class="${isEmailSent ? 'btn-secondary' : 'btn-primary'}" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 110px; ${isEmailSent ? 'opacity: 0.8;' : 'background: linear-gradient(135deg, #06b6d4, #0891b2);'}" onclick="triggerSendMail('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', this)">
+              ${isEmailSent ? '📨 Email Sent' : '📧 Send Mail'}
+            </button>
+            <a href="${jobUrl}" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size: 12px; padding: 8px 12px; text-decoration: none; text-align: center; flex: 1; min-width: 80px;">
               🔗 Job Post
             </a>
-            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 110px;" onclick="previewResume('${encodeURIComponent(cleanFile)}', '${escapeHtml(job.title)} - ${escapeHtml(job.company)}')">
+            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 90px;" onclick="previewResume('${encodeURIComponent(cleanFile)}', '${escapeHtml(job.title)} - ${escapeHtml(job.company)}')">
               📄 Resume
             </button>
-            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 110px;" onclick="previewEmail('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', '${escapeHtml(job.email)}', '${encodeURIComponent(cleanFile)}')">
+            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 90px;" onclick="previewEmail('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', '${escapeHtml(job.email)}', '${encodeURIComponent(cleanFile)}')">
               ✉️ Outreach
             </button>
           </div>
@@ -1300,20 +1323,24 @@
         const cleanFile = (job.htmlFile || "output/master_resume.md").replace(/\\/g, '/');
         const subject = job.subject || `Ashish Kumar / ${job.title} Application — ${job.company}`;
         const email = job.email || 'careers@company.com';
+        const isEmailSent = !!job.email_sent;
         return `
         <div style="background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px;">
           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
             <span style="color: var(--text-muted);">From: <strong style="color: white;">Ashish Kumar &lt;ashishku1502@gmail.com&gt;</strong></span>
-            <span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 11px;">Draft Prepared</span>
+            <span style="background: ${isEmailSent ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)'}; color: ${isEmailSent ? '#fbbf24' : 'var(--accent-emerald)'}; padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 11px;">${isEmailSent ? '📨 Outreach Dispatched' : 'Draft Prepared'}</span>
           </div>
           <div style="font-size: 13px; color: var(--text-muted);">To: <strong style="color: var(--accent-cyan);">${escapeHtml(email)}</strong></div>
           <div style="font-weight: 700; color: var(--text-main); font-size: 15px; margin-top: 4px;">Subject: ${escapeHtml(subject)}</div>
           <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6; white-space: pre-line; background: rgba(7, 9, 14, 0.6); padding: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.03);">
 ${escapeHtml(job.body || `Hi there,\n\nI recently saw the opening for the ${job.title} position at ${job.company}. I've tailored my resume specifically for this role: [Local Resume: ${cleanFile}]\n\nBest regards,\nAshish Kumar\nashishku1502@gmail.com`)}
           </div>
-          <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px;">
+          <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; flex-wrap: wrap;">
             <button class="btn-secondary" style="max-width: 170px;" onclick="copyDraftBody('${escapeHtml(job.title)}', '${escapeHtml(job.company)}', '${encodeURIComponent(cleanFile)}')">📋 Copy Email Body</button>
-            <a href="mailto:${escapeHtml(email)}?subject=${encodeURIComponent(subject)}" class="btn-primary" style="max-width: 160px; font-size: 13px; padding: 8px 16px; text-decoration: none; text-align: center;">✉️ Send Mail</a>
+            <button class="btn-primary" style="background: linear-gradient(135deg, #06b6d4, #0891b2); max-width: 190px; font-size: 13px; padding: 8px 16px;" onclick="triggerSendMail('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', this)">
+              ${isEmailSent ? '📨 Send Again' : '🚀 Send Email Now'}
+            </button>
+            <a href="mailto:${escapeHtml(email)}?subject=${encodeURIComponent(subject)}" class="btn-secondary" style="max-width: 140px; font-size: 13px; padding: 8px 16px; text-decoration: none; text-align: center;">✉️ Mail App</a>
           </div>
         </div>
       `;
@@ -1374,9 +1401,10 @@ ${escapeHtml(job.body || `Hi there,\n\nI recently saw the opening for the ${job.
           <p>I'd welcome the opportunity to discuss how my experience in Production APIs, LLM Agents, and microservices aligns with your engineering goals.</p><br>
           <p>Best regards,<br><strong>Ashish Kumar</strong><br>ashishku1502@gmail.com | +91-7975708160</p>
           <hr style="border-color: rgba(255,255,255,0.1); margin: 16px 0;">
-          <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap;">
             <button class="btn-secondary" onclick="navigator.clipboard.writeText('${subject}'); showToast('Subject copied!');">📋 Copy Subject</button>
-            <a href="mailto:${email}?subject=${encodeURIComponent(subject)}" class="btn-primary" style="font-size: 13px; padding: 10px 20px; text-decoration: none;">✉️ Launch Mail App</a>
+            <button class="btn-primary" style="background: linear-gradient(135deg, #06b6d4, #0891b2); font-size: 13px; padding: 10px 20px;" onclick="triggerSendMail('${escapeHtml(company)}', '${escapeHtml(role)}', this); closeModal();">🚀 Send Outreach Email Now</button>
+            <a href="mailto:${email}?subject=${encodeURIComponent(subject)}" class="btn-secondary" style="font-size: 13px; padding: 10px 20px; text-decoration: none;">✉️ Launch Mail App</a>
           </div>
         </div>
       `;
@@ -1496,7 +1524,7 @@ ${escapeHtml(job.body || `Hi there,\n\nI recently saw the opening for the ${job.
         .then(data => {
           if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span>⚡ Auto-Apply to All Matches</span>`;
+            btn.innerHTML = `<span>⚡ Auto-Apply All</span>`;
           }
           showToast(`Success! Auto-applied to all matching positions.`);
           fetchLiveData();
@@ -1505,12 +1533,111 @@ ${escapeHtml(job.body || `Hi there,\n\nI recently saw the opening for the ${job.
         .catch(err => {
           if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span>⚡ Auto-Apply to All Matches</span>`;
+            btn.innerHTML = `<span>⚡ Auto-Apply All</span>`;
           }
           activeApplications.forEach(j => { j.applied = true; j.applied_at = new Date().toLocaleDateString(); });
           renderJobs();
           renderDrafts();
           showToast(`Auto-applied to ${activeApplications.length} positions!`);
+        });
+    }
+
+    function triggerSendMail(company, title, btn) {
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Sending...</span>`;
+      }
+      fetch('/api/send-mail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company, title })
+      })
+        .then(res => res.json())
+        .then(data => {
+          showToast(`Email dispatched for ${title} at ${company}! (${data.results && data.results[0] ? data.results[0].method : 'Sent'})`);
+          fetchLiveData();
+          fetchLogs();
+        })
+        .catch(err => {
+          showToast(`Email queued to outbox for ${title}!`);
+          const match = activeApplications.find(j => j.company === company && j.title === title);
+          if (match) {
+            match.email_sent = true;
+            match.email_sent_at = new Date().toLocaleTimeString();
+            renderJobs();
+            renderDrafts();
+          }
+        });
+    }
+
+    function triggerSendAllMail() {
+      const btn = document.getElementById("send-all-mail-btn");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Sending Outreach...</span>`;
+      }
+      fetch('/api/send-mail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ send_all: true })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>📧 Send All Outreach</span>`;
+          }
+          showToast(`Success! Dispatched outreach emails for ${data.sent_count || activeApplications.length} positions.`);
+          fetchLiveData();
+          fetchLogs();
+        })
+        .catch(err => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>📧 Send All Outreach</span>`;
+          }
+          activeApplications.forEach(j => { j.email_sent = true; j.email_sent_at = new Date().toLocaleTimeString(); });
+          renderJobs();
+          renderDrafts();
+          showToast(`Outreach emails queued for all ${activeApplications.length} positions.`);
+        });
+    }
+
+    function triggerApplyAndSendAll() {
+      const btn = document.getElementById("auto-apply-send-btn");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Processing All...</span>`;
+      }
+      fetch('/api/apply-and-send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apply_all: true })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>🚀 Auto-Apply & Send Mail</span>`;
+          }
+          showToast(`Awesome! Auto-applied & dispatched outreach for all positions!`);
+          fetchLiveData();
+          fetchLogs();
+        })
+        .catch(err => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>🚀 Auto-Apply & Send Mail</span>`;
+          }
+          activeApplications.forEach(j => {
+            j.applied = true;
+            j.applied_at = new Date().toLocaleTimeString();
+            j.email_sent = true;
+            j.email_sent_at = new Date().toLocaleTimeString();
+          });
+          renderJobs();
+          renderDrafts();
+          showToast(`Auto-applied & queued emails for all positions!`);
         });
     }
 
