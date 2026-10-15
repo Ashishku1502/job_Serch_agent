@@ -127,11 +127,57 @@ class handler(BaseHTTPRequestHandler):
         self.send_cors_headers()
         self.end_headers()
 
-    def do_GET(self):
-        parsed_url = urllib.parse.urlparse(self.path)
-        path = parsed_url.path
+    def get_endpoint(self):
+        parsed = urllib.parse.urlparse(self.path)
+        qs = urllib.parse.parse_qs(parsed.query)
+        if "endpoint" in qs:
+            val = qs["endpoint"][0].strip()
+            if val.lower().startswith("api/"):
+                return val[4:].strip("/")
+            return val.strip("/")
+        path = parsed.path.strip("/")
+        if path.lower().startswith("api/"):
+            return path[4:].strip("/")
+        for candidate in ["apply-and-send", "send-mail", "apply", "status", "data", "logs", "sync_github", "run"]:
+            if candidate in path.lower():
+                return candidate
+        return path
 
-        if path.endswith("/status"):
+    def do_HEAD(self):
+        self.do_GET()
+
+    def find_file(self, rel_path):
+        clean = rel_path.lstrip("/\\")
+        candidates = [
+            os.path.join(BASE_DIR, clean),
+            os.path.join(API_DIR, clean),
+            os.path.join(os.getcwd(), clean),
+            os.path.join("/var/task", clean),
+        ]
+        for c in candidates:
+            if os.path.exists(c) and os.path.isfile(c):
+                return c
+        return None
+
+    def do_GET(self):
+        endpoint = self.get_endpoint()
+
+        # 1. Static files from output directory (e.g. resumes, drafts)
+        clean_req = urllib.parse.unquote(endpoint).lstrip("/")
+        if clean_req.startswith("output/"):
+            target_path = self.find_file(clean_req)
+            if target_path:
+                content_type = "text/html; charset=utf-8" if target_path.endswith(".html") else "application/json" if target_path.endswith(".json") else "text/plain"
+                self.send_response(200)
+                self.send_header("Content-type", content_type)
+                self.send_cors_headers()
+                self.end_headers()
+                with open(target_path, "rb") as f:
+                    self.wfile.write(f.read())
+                return
+
+        # 2. Serverless API routes
+        if endpoint == "status":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.send_cors_headers()
@@ -144,7 +190,7 @@ class handler(BaseHTTPRequestHandler):
             }).encode("utf-8"))
             return
 
-        elif path.endswith("/data"):
+        elif endpoint == "data":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.send_cors_headers()
@@ -164,7 +210,7 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(response_payload, ensure_ascii=False).encode("utf-8"))
             return
 
-        elif path.endswith("/logs"):
+        elif endpoint == "logs":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.send_cors_headers()
@@ -180,11 +226,21 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"logs": log_content}).encode("utf-8"))
             return
 
-        self.send_error(404, "Endpoint not found")
+        # 3. Root dashboard or index.html
+        if endpoint in ["", "index.html", "index.py", "index"] or not endpoint:
+            index_file = self.find_file("index.html")
+            if index_file:
+                self.send_response(200)
+                self.send_header("Content-type", "text/html; charset=utf-8")
+                self.send_cors_headers()
+                self.end_headers()
+                with open(index_file, "rb") as f:
+                    self.wfile.write(f.read())
+                return
+        self.send_error(404, f"API endpoint not found: {endpoint}")
 
     def do_POST(self):
-        parsed_url = urllib.parse.urlparse(self.path)
-        path = parsed_url.path
+        endpoint = self.get_endpoint()
 
         content_length = int(self.headers.get("Content-Length", 0))
         payload = {}
@@ -195,78 +251,7 @@ class handler(BaseHTTPRequestHandler):
             except Exception:
                 payload = {}
 
-        if path.endswith("/apply"):
-            target_company = payload.get("company", "").strip().lower()
-            target_title = payload.get("title", "").strip().lower()
-            apply_all = payload.get("apply_all", False)
-
-            drafts = parse_drafts()
-            updated_count = 0
-            now_str = time.strftime("%Y-%m-%d %H:%M")
-            for d in drafts:
-                c_match = (not target_company) or (d.get("company", "").strip().lower() == target_company)
-                t_match = (not target_title) or (d.get("title", "").strip().lower() == target_title)
-                if apply_all or (c_match and t_match):
-                    d["applied"] = True
-                    d["applied_at"] = now_str
-                    updated_count += 1
-                    if not apply_all:
-                        break
-
-            save_drafts_data(drafts)
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
-            self.send_cors_headers()
-            self.end_headers()
-            self.wfile.write(json.dumps({
-                "status": "success",
-                "message": f"Successfully auto-applied to {updated_count} job application(s)!",
-                "applied_count": updated_count
-            }).encode("utf-8"))
-            return
-
-        elif path.endswith("/send-mail"):
-            target_company = payload.get("company", "").strip().lower()
-            target_title = payload.get("title", "").strip().lower()
-            send_all = payload.get("send_all", False)
-
-            drafts = parse_drafts()
-            sent_count = 0
-            results = []
-            now_str = time.strftime("%Y-%m-%d %H:%M")
-            for d in drafts:
-                c_match = (not target_company) or (d.get("company", "").strip().lower() == target_company)
-                t_match = (not target_title) or (d.get("title", "").strip().lower() == target_title)
-                if send_all or (c_match and t_match):
-                    to_email = d.get("to") or d.get("email", "careers@company.com")
-                    subject = d.get("subject") or f"Application for {d.get('title')} at {d.get('company')}"
-                    body = d.get("body", "")
-                    resume_rel = d.get("htmlFile", "")
-                    resume_full = os.path.join(BASE_DIR, resume_rel) if resume_rel else None
-
-                    res = send_outreach_email(to_email, subject, body, resume_full)
-                    d["email_sent"] = True
-                    d["email_sent_at"] = now_str
-                    d["delivery_method"] = res.get("method", "Outbox")
-                    sent_count += 1
-                    results.append(res)
-                    if not send_all:
-                        break
-
-            save_drafts_data(drafts)
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
-            self.send_cors_headers()
-            self.end_headers()
-            self.wfile.write(json.dumps({
-                "status": "success",
-                "message": f"Successfully sent/dispatched {sent_count} outreach email(s)!",
-                "sent_count": sent_count,
-                "results": results[:5]
-            }).encode("utf-8"))
-            return
-
-        elif path.endswith("/apply-and-send"):
+        if endpoint == "apply-and-send":
             target_company = payload.get("company", "").strip().lower()
             target_title = payload.get("title", "").strip().lower()
             apply_all = payload.get("apply_all", True)
@@ -307,7 +292,78 @@ class handler(BaseHTTPRequestHandler):
             }).encode("utf-8"))
             return
 
-        elif path.endswith("/sync_github"):
+        elif endpoint == "send-mail":
+            target_company = payload.get("company", "").strip().lower()
+            target_title = payload.get("title", "").strip().lower()
+            send_all = payload.get("send_all", False)
+
+            drafts = parse_drafts()
+            sent_count = 0
+            results = []
+            now_str = time.strftime("%Y-%m-%d %H:%M")
+            for d in drafts:
+                c_match = (not target_company) or (d.get("company", "").strip().lower() == target_company)
+                t_match = (not target_title) or (d.get("title", "").strip().lower() == target_title)
+                if send_all or (c_match and t_match):
+                    to_email = d.get("to") or d.get("email", "careers@company.com")
+                    subject = d.get("subject") or f"Application for {d.get('title')} at {d.get('company')}"
+                    body = d.get("body", "")
+                    resume_rel = d.get("htmlFile", "")
+                    resume_full = os.path.join(BASE_DIR, resume_rel) if resume_rel else None
+
+                    res = send_outreach_email(to_email, subject, body, resume_full)
+                    d["email_sent"] = True
+                    d["email_sent_at"] = now_str
+                    d["delivery_method"] = res.get("method", "Outbox")
+                    sent_count += 1
+                    results.append(res)
+                    if not send_all:
+                        break
+
+            save_drafts_data(drafts)
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_cors_headers()
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "status": "success",
+                "message": f"Successfully sent/dispatched {sent_count} outreach email(s)!",
+                "sent_count": sent_count,
+                "results": results[:5]
+            }).encode("utf-8"))
+            return
+
+        elif endpoint == "apply":
+            target_company = payload.get("company", "").strip().lower()
+            target_title = payload.get("title", "").strip().lower()
+            apply_all = payload.get("apply_all", False)
+
+            drafts = parse_drafts()
+            updated_count = 0
+            now_str = time.strftime("%Y-%m-%d %H:%M")
+            for d in drafts:
+                c_match = (not target_company) or (d.get("company", "").strip().lower() == target_company)
+                t_match = (not target_title) or (d.get("title", "").strip().lower() == target_title)
+                if apply_all or (c_match and t_match):
+                    d["applied"] = True
+                    d["applied_at"] = now_str
+                    updated_count += 1
+                    if not apply_all:
+                        break
+
+            save_drafts_data(drafts)
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_cors_headers()
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "status": "success",
+                "message": f"Successfully auto-applied to {updated_count} job application(s)!",
+                "applied_count": updated_count
+            }).encode("utf-8"))
+            return
+
+        elif endpoint == "sync_github":
             sync_res = sync_output_folder_to_github(OUTPUT_DIR)
             self.send_response(200)
             self.send_header("Content-type", "application/json")
@@ -316,7 +372,7 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(sync_res).encode("utf-8"))
             return
 
-        elif path.endswith("/run"):
+        elif endpoint == "run":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.send_cors_headers()
@@ -327,4 +383,4 @@ class handler(BaseHTTPRequestHandler):
             }).encode("utf-8"))
             return
 
-        self.send_error(404, "Endpoint not found")
+        self.send_error(404, f"API endpoint not found: {endpoint}")

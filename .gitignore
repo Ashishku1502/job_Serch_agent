@@ -23,3 +23,5 @@ Thumbs.db
 # Output directory (optional / generated artifacts)
 # output/*.html
 # output/drafts.json
+
+.vercel
