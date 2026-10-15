@@ -450,3 +450,9 @@ NameError: name 'local_rel_path' is not defined
 Pipeline Run Triggered at 2026-10-15 20:48:06
 Config: Query='Machine Learning Engineer', Location='Remote', MaxJobs=16, MinScore=60
 ==================================================
+2026-10-15 20:48:28,414 [INFO] Starting pipeline for query='Machine Learning Engineer', location='Remote', max_jobs=16, min_score=60
+2026-10-15 20:48:28,415 [INFO] Loading master resume from local file: master_resume.md
+2026-10-15 20:48:28,446 [INFO] Attempting Tier 1: Scraping LinkedIn jobs via Apify API...
+2026-10-15 20:48:31,618 [WARNING] Apify usage limit exceeded (status 403). Proceeding directly to Tier 2 live scraper.
+2026-10-15 20:48:31,618 [INFO] Attempting Tier 2: Real-time direct LinkedIn live scraper...
+2026-10-15 20:48:31,618 [INFO] Attempting direct live LinkedIn guest scraping for 'Machine Learning Engineer' in 'Remote'...
