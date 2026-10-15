@@ -747,8 +747,12 @@ Best regards,
     except Exception as exc:
         logger.warning("Gmail draft creation unavailable (%s). Logging outreach draft locally.", exc)
         os.makedirs("output", exist_ok=True)
-        drafts_file = os.path.join("output", "drafts.json")
-        local_rel_path = resume_doc.get("local_path", "").replace("\\", "/")
+        job_url = job.get("job_url")
+        if not job_url:
+            encoded_title = requests.utils.quote(job.get("title", ""))
+            encoded_company = requests.utils.quote(job.get("company", ""))
+            job_url = f"https://www.linkedin.com/jobs/search/?keywords={encoded_title}+{encoded_company}"
+
         draft_item = {
             "to": to_address,
             "from": Config.SENDER_EMAIL,
@@ -760,7 +764,10 @@ Best regards,
             "score": job.get("match_score", 85),
             "reason": job.get("match_reason", ""),
             "htmlFile": local_rel_path or doc_link,
-            "email": to_address
+            "email": to_address,
+            "job_url": job_url,
+            "applied": False,
+            "applied_at": ""
         }
 
         existing = []

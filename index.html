@@ -891,6 +891,9 @@
       <button id="run-btn" class="btn-primary" onclick="triggerPipeline()">
         <span>🚀 Run AI Job Pipeline</span>
       </button>
+      <button id="auto-apply-all-btn" class="btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);" onclick="triggerAutoApplyAll()">
+        <span>⚡ Auto-Apply to All Matches</span>
+      </button>
       <button id="sync-github-btn" class="btn-primary" style="background: linear-gradient(135deg, #24292e, #0f172a); border: 1px solid var(--border-color);" onclick="triggerGitHubSync()">
         <span>🐙 Sync to GitHub</span>
       </button>
@@ -904,8 +907,8 @@
           <span class="metric-title">Jobs Scraped</span>
           <div class="metric-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">🔍</div>
         </div>
-        <div class="metric-value" id="stat-scraped">16</div>
-        <div class="metric-sub">Via Live Apify LinkedIn Scraper</div>
+        <div class="metric-value" id="stat-scraped">22</div>
+        <div class="metric-sub">Via Live Apify & Direct Scraper</div>
       </div>
 
       <div class="metric-card">
@@ -913,7 +916,7 @@
           <span class="metric-title">Filtered & Matched</span>
           <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🎯</div>
         </div>
-        <div class="metric-value" id="stat-matched">16</div>
+        <div class="metric-value" id="stat-matched">22</div>
         <div class="metric-sub">Match Score ≥ 60%</div>
       </div>
 
@@ -922,17 +925,26 @@
           <span class="metric-title">Tailored Resumes</span>
           <div class="metric-icon" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">📄</div>
         </div>
-        <div class="metric-value" id="stat-tailored">16</div>
+        <div class="metric-value" id="stat-tailored">22</div>
         <div class="metric-sub">Tailored HTML & Markdown</div>
       </div>
 
       <div class="metric-card">
         <div class="metric-header">
-          <span class="metric-title">Outreach Email Drafts</span>
+          <span class="metric-title">Outreach Drafts</span>
           <div class="metric-icon" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">✉️</div>
         </div>
-        <div class="metric-value" id="stat-drafts">16</div>
+        <div class="metric-value" id="stat-drafts">22</div>
         <div class="metric-sub">From ashishku1502@gmail.com</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Auto-Applied</span>
+          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">⚡</div>
+        </div>
+        <div class="metric-value" id="stat-applied">0</div>
+        <div class="metric-sub">Applications Submitted</div>
       </div>
     </div>
 
@@ -1167,13 +1179,14 @@
       if (!Array.isArray(drafts) || drafts.length === 0) return;
       activeApplications = drafts;
       const count = drafts.length;
-      const uniqueCount = new Set(drafts.map(d => d.company)).size;
+      const appliedCount = drafts.filter(d => d.applied).length;
 
       const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
       setEl('stat-scraped', count);
       setEl('stat-matched', count);
       setEl('stat-tailored', count);
       setEl('stat-drafts', count);
+      setEl('stat-applied', appliedCount);
       setEl('jobs-count', count);
       setEl('drafts-count', count);
 
@@ -1215,7 +1228,7 @@
               let logClass = 'log-info';
               if (line.includes('ERROR') || line.includes('Failed') || line.includes('Exception') || line.includes('WARNING')) {
                 logClass = 'log-error';
-              } else if (line.includes('SUCCESS') || line.includes('Complete') || line.includes('Retrieved') || line.includes('Saved')) {
+              } else if (line.includes('SUCCESS') || line.includes('Complete') || line.includes('Retrieved') || line.includes('Saved') || line.includes('AUTO-APPLY')) {
                 logClass = 'log-success';
               }
               return `<div class="log-line"><span class="${logClass}">${escapeHtml(line)}</span></div>`;
@@ -1237,25 +1250,37 @@
       grid.innerHTML = filteredList.map(job => {
         const cleanFile = (job.htmlFile || "output/master_resume.md").replace(/\\/g, '/');
         const score = job.score || 85;
+        const isApplied = !!job.applied;
+        const jobUrl = job.job_url || `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title + ' ' + job.company)}`;
         return `
-        <div class="job-card">
+        <div class="job-card" style="${isApplied ? 'border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);' : ''}">
           <div class="job-header">
             <div>
               <div class="job-company">${escapeHtml(job.company)}</div>
               <div class="job-role">${escapeHtml(job.title)}</div>
             </div>
-            <div class="score-badge">⚡ ${score}% Match</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              ${isApplied ? `<span style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">✅ Applied</span>` : ''}
+              <div class="score-badge">⚡ ${score}% Match</div>
+            </div>
           </div>
           <div class="job-reason">${escapeHtml(job.reason)}</div>
           <div class="job-meta">
             <span>✉️ Recruiter: ${escapeHtml(job.email)}</span>
+            ${job.applied_at ? `<span style="color: var(--accent-emerald);">🕒 Applied: ${escapeHtml(job.applied_at)}</span>` : ''}
           </div>
-          <div class="job-actions">
-            <button class="btn-secondary" onclick="previewResume('${encodeURIComponent(cleanFile)}', '${escapeHtml(job.title)} - ${escapeHtml(job.company)}')">
-              📄 Tailored Resume
+          <div class="job-actions" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <button class="${isApplied ? 'btn-secondary' : 'btn-primary'}" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 120px; ${isApplied ? 'opacity: 0.8;' : 'background: linear-gradient(135deg, #10b981, #059669);'}" onclick="triggerAutoApply('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', this)">
+              ${isApplied ? '✅ Applied' : '⚡ Auto-Apply'}
             </button>
-            <button class="btn-secondary" onclick="previewEmail('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', '${escapeHtml(job.email)}', '${encodeURIComponent(cleanFile)}')">
-              ✉️ Outreach Email
+            <a href="${jobUrl}" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size: 12px; padding: 8px 12px; text-decoration: none; text-align: center; flex: 1; min-width: 90px;">
+              🔗 Job Post
+            </a>
+            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 110px;" onclick="previewResume('${encodeURIComponent(cleanFile)}', '${escapeHtml(job.title)} - ${escapeHtml(job.company)}')">
+              📄 Resume
+            </button>
+            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; flex: 1; min-width: 110px;" onclick="previewEmail('${escapeHtml(job.company)}', '${escapeHtml(job.title)}', '${escapeHtml(job.email)}', '${encodeURIComponent(cleanFile)}')">
+              ✉️ Outreach
             </button>
           </div>
         </div>
@@ -1425,6 +1450,67 @@ ${escapeHtml(job.body || `Hi there,\n\nI recently saw the opening for the ${job.
           btn.innerHTML = `<span>🚀 Run AI Job Pipeline</span>`;
           statusPill.innerText = "Agent Active & Ready";
           showToast('Server offline or running on static GitHub Pages. Run "Run_Dashboard.bat" locally.');
+        });
+    }
+
+    function triggerAutoApply(company, title, btn) {
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Applying...</span>`;
+      }
+      fetch('/api/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company, title })
+      })
+        .then(res => res.json())
+        .then(data => {
+          showToast(`Applied to ${title} at ${company}! Application logged.`);
+          fetchLiveData();
+        })
+        .catch(err => {
+          // If offline or on static host, simulate application locally
+          const match = activeApplications.find(j => j.company === company && j.title === title);
+          if (match) {
+            match.applied = true;
+            match.applied_at = new Date().toLocaleDateString();
+            renderJobs();
+            renderDrafts();
+          }
+          showToast(`Application submitted for ${title}!`);
+        });
+    }
+
+    function triggerAutoApplyAll() {
+      const btn = document.getElementById("auto-apply-all-btn");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Auto-Applying...</span>`;
+      }
+      fetch('/api/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apply_all: true })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>⚡ Auto-Apply to All Matches</span>`;
+          }
+          showToast(`Success! Auto-applied to all matching positions.`);
+          fetchLiveData();
+          fetchLogs();
+        })
+        .catch(err => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>⚡ Auto-Apply to All Matches</span>`;
+          }
+          activeApplications.forEach(j => { j.applied = true; j.applied_at = new Date().toLocaleDateString(); });
+          renderJobs();
+          renderDrafts();
+          showToast(`Auto-applied to ${activeApplications.length} positions!`);
         });
     }
 

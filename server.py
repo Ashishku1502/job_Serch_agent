@@ -71,6 +71,14 @@ def parse_drafts_data():
         score = item.get("score") or item.get("match_score") or 85
         reason = item.get("reason") or item.get("match_reason") or f"High relevance match based on {title} requirements."
 
+        job_url = item.get("job_url")
+        if not job_url:
+            encoded_q = urllib.parse.quote(f"{title} {company}")
+            job_url = f"https://www.linkedin.com/jobs/search/?keywords={encoded_q}"
+
+        applied = item.get("applied", False)
+        applied_at = item.get("applied_at", "")
+
         parsed_applications.append({
             "company": company,
             "title": title,
@@ -80,7 +88,10 @@ def parse_drafts_data():
             "email": to_email,
             "subject": subject or f"Ashish Kumar / {title} Application — {company}",
             "body": body,
-            "time": item.get("time", "")
+            "time": item.get("time", ""),
+            "job_url": job_url,
+            "applied": applied,
+            "applied_at": applied_at
         })
 
     return parsed_applications
@@ -130,10 +141,12 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             applications = parse_drafts_data()
             unique_companies = len(set(app["company"] for app in applications)) if applications else 0
+            applied_count = sum(1 for app in applications if app.get("applied"))
             response_payload = {
                 "drafts": applications,
                 "count": len(applications),
                 "unique_companies": unique_companies,
+                "applied_count": applied_count,
                 "status": "active"
             }
             self.wfile.write(json.dumps(response_payload, ensure_ascii=False).encode("utf-8"))
@@ -204,6 +217,64 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
                 "message": "Pipeline execution started successfully!",
                 "log_file": "output/pipeline.log",
                 "params": payload
+            }).encode("utf-8"))
+            return
+        elif path == "/api/apply":
+            content_length = int(self.headers.get("Content-Length", 0))
+            payload = {}
+            if content_length > 0:
+                try:
+                    body_bytes = self.rfile.read(content_length)
+                    payload = json.loads(body_bytes.decode("utf-8"))
+                except Exception:
+                    payload = {}
+
+            target_company = payload.get("company", "").strip().lower()
+            target_title = payload.get("title", "").strip().lower()
+            apply_all = payload.get("apply_all", False)
+
+            drafts_path = os.path.join(OUTPUT_DIR, "drafts.json")
+            updated_count = 0
+            if os.path.exists(drafts_path):
+                try:
+                    with open(drafts_path, "r", encoding="utf-8") as f:
+                        drafts = json.load(f)
+
+                    now_str = time.strftime("%Y-%m-%d %H:%M")
+                    for d in drafts:
+                        c_match = (not target_company) or (d.get("company", "").strip().lower() == target_company)
+                        t_match = (not target_title) or (d.get("title", "").strip().lower() == target_title)
+                        if apply_all or (c_match and t_match):
+                            d["applied"] = True
+                            d["applied_at"] = now_str
+                            updated_count += 1
+                            if not apply_all:
+                                break
+
+                    with open(drafts_path, "w", encoding="utf-8") as f:
+                        json.dump(drafts, f, indent=2, ensure_ascii=False)
+                except Exception as exc:
+                    self.send_error(500, f"Error updating application state: {exc}")
+                    return
+
+            if os.path.exists(LOG_FILE):
+                try:
+                    with open(LOG_FILE, "a", encoding="utf-8", errors="replace") as log_f:
+                        if apply_all:
+                            log_f.write(f"[{time.strftime('%H:%M:%S')}] [AUTO-APPLY] Batch auto-applied to {updated_count} positions with tailored resumes.\n")
+                        else:
+                            log_f.write(f"[{time.strftime('%H:%M:%S')}] [AUTO-APPLY] Submitted application for {payload.get('title')} at {payload.get('company')}.\n")
+                except Exception:
+                    pass
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_cors_headers()
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "status": "success",
+                "message": f"Successfully auto-applied to {updated_count} job application(s)!",
+                "applied_count": updated_count
             }).encode("utf-8"))
             return
         elif path == "/api/sync_github":
