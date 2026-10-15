@@ -763,3 +763,73 @@ NameError: name 'local_rel_path' is not defined
 [21:36:17] [EMAIL-SEND] Dispatched outreach email for Machine Learning Engineer, Radar at Stripe.
 [21:36:19] [EMAIL-SEND] Dispatched outreach email for Machine Learning Engineer at Cimri.
 [21:53:32] [AUTO-APPLY & EMAIL] Processed & applied to 31 positions and dispatched outreach emails.
+[21:59:42] [AUTO-APPLY] Batch auto-applied to 31 positions with tailored resumes.
+[22:00:12] [EMAIL-SEND] Dispatched outreach emails to 31 recruiter contacts.
+
+==================================================
+Pipeline Run Triggered at 2026-10-15 22:00:16
+Config: Query='Machine Learning Engineer', Location='Remote', MaxJobs=16, MinScore=60
+==================================================
+2026-10-15 22:00:45,254 [INFO] Starting pipeline for query='Machine Learning Engineer', location='Remote', max_jobs=16, min_score=60
+2026-10-15 22:00:45,257 [INFO] Loading master resume from local file: master_resume.md
+2026-10-15 22:00:45,281 [INFO] Attempting Tier 1: Scraping LinkedIn jobs via Apify API...
+2026-10-15 22:00:49,408 [WARNING] Apify usage limit exceeded (status 403). Proceeding directly to Tier 2 live scraper.
+2026-10-15 22:00:49,408 [INFO] Attempting Tier 2: Real-time direct LinkedIn live scraper...
+2026-10-15 22:00:49,409 [INFO] Attempting direct live LinkedIn guest scraping for 'Machine Learning Engineer' in 'Remote'...
+2026-10-15 22:00:51,391 [INFO] Successfully retrieved 10 live job postings directly from LinkedIn guest endpoint.
+2026-10-15 22:00:51,402 [INFO] Filtering 10 jobs...
+2026-10-15 22:00:51,403 [INFO] 10 jobs passed the filter (score >= 60).
+2026-10-15 22:00:51,403 [INFO] Tailoring resume for: Machine Learning Engineer (Python) - Remote Work | REF#297197 at BairesDev
+2026-10-15 22:00:52,058 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:00:52,059 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Python - Remote Work  REF297197 - BairesDev.html
+2026-10-15 22:00:52,060 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:00:52,071 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:00:52,072 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Machine Learning Engineer (Python) - Remote Work | REF#297197' at 'BairesDev'.
+2026-10-15 22:00:54,072 [INFO] Tailoring resume for: Machine Learning Engineer (Python) - Remote Work | REF#297202 at BairesDev
+2026-10-15 22:00:54,095 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:00:54,098 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Python - Remote Work  REF297202 - BairesDev.html
+2026-10-15 22:00:54,099 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:00:54,110 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:00:54,110 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Machine Learning Engineer (Python) - Remote Work | REF#297202' at 'BairesDev'.
+2026-10-15 22:00:56,110 [INFO] Tailoring resume for: Senior Machine Learning Engineer at NewMind AI
+2026-10-15 22:00:56,137 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:00:56,139 [INFO] Saved local HTML resume to: output\Resume - Senior Machine Learning Engineer - NewMind AI.html
+2026-10-15 22:00:56,139 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:00:57,167 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:00:57,168 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Senior Machine Learning Engineer' at 'NewMind AI'.
+2026-10-15 22:00:59,182 [INFO] Tailoring resume for: Machine Learning Engineer 1 - UAE National at noon
+2026-10-15 22:00:59,208 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:00:59,209 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer 1 - UAE National - noon.html
+2026-10-15 22:00:59,209 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:00:59,219 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:00:59,219 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Machine Learning Engineer 1 - UAE National' at 'noon'.
+2026-10-15 22:01:01,224 [INFO] Tailoring resume for: Machine Learning Engineer at Cimri
+2026-10-15 22:01:01,249 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:01:01,249 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer - Cimri.html
+2026-10-15 22:01:01,250 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:01:01,331 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:01:01,333 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Machine Learning Engineer' at 'Cimri'.
+2026-10-15 22:01:03,336 [INFO] Tailoring resume for: Machine Learning Engineer, Radar at Stripe
+2026-10-15 22:01:03,360 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:01:03,364 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Radar - Stripe.html
+2026-10-15 22:01:03,365 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:01:03,372 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:01:03,372 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Machine Learning Engineer, Radar' at 'Stripe'.
+2026-10-15 22:01:05,384 [INFO] Tailoring resume for: Machine Learning Engineer (Decision Engine) at Trusting Social
+2026-10-15 22:01:05,408 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:01:05,424 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Decision Engine - Trusting Social.html
+2026-10-15 22:01:05,425 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:01:05,434 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:01:05,434 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Machine Learning Engineer (Decision Engine)' at 'Trusting Social'.
+2026-10-15 22:01:07,436 [INFO] Tailoring resume for: Machine Learning Engineer, Radar at Stripe
+2026-10-15 22:01:07,460 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:01:07,469 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Radar - Stripe.html
+2026-10-15 22:01:07,469 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:01:07,476 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:01:07,476 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Machine Learning Engineer, Radar' at 'Stripe'.
+2026-10-15 22:01:09,481 [INFO] Tailoring resume for: Senior Machine Learning Engineer at OREDATA
+2026-10-15 22:01:09,503 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:01:09,504 [INFO] Saved local HTML resume to: output\Resume - Senior Machine Learning Engineer - OREDATA.html
+2026-10-15 22:01:09,504 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:01:09,512 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:01:09,512 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Senior Machine Learning Engineer' at 'OREDATA'.
