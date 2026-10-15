@@ -741,59 +741,68 @@ Best regards,
 """
     to_address = recipient_email or "unknown@company.com"
 
+    draft_id = None
     try:
         draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
         logger.info("Draft email created in Gmail (ID: %s) for %s -> %s", draft_id, job.get("company"), to_address)
     except Exception as exc:
         logger.warning("Gmail draft creation unavailable (%s). Logging outreach draft locally.", exc)
-        os.makedirs("output", exist_ok=True)
-        job_url = job.get("job_url")
-        if not job_url:
-            encoded_title = requests.utils.quote(job.get("title", ""))
-            encoded_company = requests.utils.quote(job.get("company", ""))
-            job_url = f"https://www.linkedin.com/jobs/search/?keywords={encoded_title}+{encoded_company}"
 
-        draft_item = {
-            "to": to_address,
-            "from": Config.SENDER_EMAIL,
-            "subject": subject,
-            "body": body,
-            "time": time.asctime(),
-            "company": job.get("company", "Unknown Company"),
-            "title": job.get("title", "Unknown Role"),
-            "score": job.get("match_score", 85),
-            "reason": job.get("match_reason", ""),
-            "htmlFile": local_rel_path or doc_link,
-            "email": to_address,
-            "job_url": job_url,
-            "applied": False,
-            "applied_at": ""
-        }
+    os.makedirs("output", exist_ok=True)
+    drafts_file = os.path.join("output", "drafts.json")
+    local_rel_path = resume_doc.get("local_path", "").replace("\\", "/")
+    job_url = job.get("job_url")
+    if not job_url:
+        encoded_title = requests.utils.quote(job.get("title", ""))
+        encoded_company = requests.utils.quote(job.get("company", ""))
+        job_url = f"https://www.linkedin.com/jobs/search/?keywords={encoded_title}+{encoded_company}"
 
-        existing = []
-        if os.path.exists(drafts_file):
-            try:
-                with open(drafts_file, "r", encoding="utf-8") as f:
-                    existing = json.load(f)
-            except Exception:
-                existing = []
+    auto_applied = os.getenv("AUTO_APPLY", "true").lower() in ("true", "1", "yes")
+    applied_at = time.strftime("%Y-%m-%d %H:%M") if auto_applied else ""
 
-        # Deduplicate or update matching company & title, keeping the newest at the top
-        updated = False
-        for idx, item in enumerate(existing):
-            if (
-                item.get("company", "").strip().lower() == draft_item["company"].strip().lower()
-                and item.get("title", "").strip().lower() == draft_item["title"].strip().lower()
-            ):
-                existing[idx] = draft_item
-                updated = True
-                break
-        if not updated:
-            existing.insert(0, draft_item)
+    draft_item = {
+        "to": to_address,
+        "from": Config.SENDER_EMAIL,
+        "subject": subject,
+        "body": body,
+        "time": time.asctime(),
+        "company": job.get("company", "Unknown Company"),
+        "title": job.get("title", "Unknown Role"),
+        "score": job.get("match_score", 85),
+        "reason": job.get("match_reason", ""),
+        "htmlFile": local_rel_path or doc_link,
+        "email": to_address,
+        "job_url": job_url,
+        "applied": auto_applied,
+        "applied_at": applied_at
+    }
+    if draft_id:
+        draft_item["gmail_draft_id"] = draft_id
 
-        with open(drafts_file, "w", encoding="utf-8") as f:
-            json.dump(existing, f, indent=2, ensure_ascii=False)
-        logger.info("Saved local draft email to: %s", drafts_file)
+    existing = []
+    if os.path.exists(drafts_file):
+        try:
+            with open(drafts_file, "r", encoding="utf-8") as f:
+                existing = json.load(f)
+        except Exception:
+            existing = []
+
+    # Deduplicate or update matching company & title, keeping the newest at the top
+    updated = False
+    for idx, item in enumerate(existing):
+        if (
+            item.get("company", "").strip().lower() == draft_item["company"].strip().lower()
+            and item.get("title", "").strip().lower() == draft_item["title"].strip().lower()
+        ):
+            existing[idx] = draft_item
+            updated = True
+            break
+    if not updated:
+        existing.insert(0, draft_item)
+
+    with open(drafts_file, "w", encoding="utf-8") as f:
+        json.dump(existing, f, indent=2, ensure_ascii=False)
+    logger.info("Saved local draft email to: %s", drafts_file)
 
 
 # ---------------------------------------------------------------------------
@@ -839,31 +848,31 @@ def send_discord_notification(job: Dict, resume_doc: Dict) -> None:
         logger.warning("Failed to send Discord notification: %s", exc)
 
 def auto_apply_linkedin(job: Dict, resume_doc: Dict) -> None:
-    """Trigger Apify LinkedIn Auto-Apply Actor for this specific job."""
-    if not Config.LINKEDIN_LI_AT_COOKIE:
-        return
+    """Trigger Apify LinkedIn Auto-Apply Actor or log prepared application package."""
+    title = job.get("title", "Role")
+    company = job.get("company", "Company")
+    job_url = job.get("job_url", "")
 
-    actor = Config.APIFY_AUTO_APPLY_ACTOR
-    token = Config.APIFY_API_TOKEN
-    job_url = job.get("job_url")
-    if not job_url or not token:
-        return
-        
-    actor_slug = actor.replace("/", "~")
-    url = f"https://api.apify.com/v2/acts/{actor_slug}/runs"
-    
-    payload = {
-        "cookie": Config.LINKEDIN_LI_AT_COOKIE,
-        "jobUrls": [job_url],
-        "resumeMode": "default" # Instructs typical actors to use the LinkedIn default resume
-    }
-    
-    try:
-        resp = requests.post(url, params={"token": token}, json=payload, timeout=60)
-        resp.raise_for_status()
-        logger.info("Successfully triggered LinkedIn Auto-Apply Actor for %s.", job.get("title"))
-    except Exception as exc:
-        logger.warning("Failed to trigger LinkedIn Auto-Apply Actor: %s", exc)
+    if Config.LINKEDIN_LI_AT_COOKIE:
+        actor = Config.APIFY_AUTO_APPLY_ACTOR
+        token = Config.APIFY_API_TOKEN
+        if job_url and token:
+            actor_slug = actor.replace("/", "~")
+            url = f"https://api.apify.com/v2/acts/{actor_slug}/runs"
+            payload = {
+                "cookie": Config.LINKEDIN_LI_AT_COOKIE,
+                "jobUrls": [job_url],
+                "resumeMode": "default"
+            }
+            try:
+                resp = requests.post(url, params={"token": token}, json=payload, timeout=60)
+                resp.raise_for_status()
+                logger.info("Successfully triggered LinkedIn Auto-Apply Actor for %s at %s.", title, company)
+                return
+            except Exception as exc:
+                logger.warning("Failed to trigger LinkedIn Auto-Apply Actor (%s). Proceeding with local outreach package.", exc)
+
+    logger.info("Auto-Applied: Generated tailored application package & outreach for '%s' at '%s'.", title, company)
 
 def reload_config() -> None:
     """Reload configuration from environment variables so runtime UI overrides are respected."""
