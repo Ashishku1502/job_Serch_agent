@@ -1008,7 +1008,7 @@
   </main>
 
   <!-- Interactive Document / Email Preview Modal -->
-  <div class="modal-overlay" id="modal-overlay">
+  <div class="modal-overlay" id="modal-overlay" onclick="if(event.target === this) closeModal()">
     <div class="modal-box">
       <div class="modal-header">
         <div class="modal-title" id="modal-title">Preview Document</div>
@@ -1375,8 +1375,13 @@ ${escapeHtml(job.body || `Hi there,\n\nI recently saw the opening for the ${job.
     }
 
     function closeModal() {
-      document.getElementById('modal-overlay').classList.remove('active');
+      const modal = document.getElementById('modal-overlay');
+      if (modal) modal.classList.remove('active');
     }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
 
     function triggerPipeline() {
       const btn = document.getElementById("run-btn");
