@@ -833,3 +833,14 @@ Config: Query='Machine Learning Engineer', Location='Remote', MaxJobs=16, MinSco
 2026-10-15 22:01:09,504 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
 2026-10-15 22:01:09,512 [INFO] Saved local draft email to: output\drafts.json
 2026-10-15 22:01:09,512 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Senior Machine Learning Engineer' at 'OREDATA'.
+2026-10-15 22:01:11,515 [INFO] Tailoring resume for: Machine Learning Engineer at videosdk.live
+2026-10-15 22:01:11,547 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 22:01:11,548 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer - videosdklive.html
+2026-10-15 22:01:11,548 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 22:01:11,555 [INFO] Saved local draft email to: output\drafts.json
+2026-10-15 22:01:11,555 [INFO] Auto-Applied: Generated tailored application package & outreach for 'Machine Learning Engineer' at 'videosdk.live'.
+2026-10-15 22:01:13,557 [INFO] Pipeline complete. Processed 10 job(s).
+2026-10-15 22:01:13,558 [INFO] Starting GitHub sync for 34 file(s) in output...
+2026-10-15 22:01:13,558 [INFO] GITHUB_TOKEN not set. Attempting sync via local Git CLI...
+2026-10-15 22:01:24,188 [INFO] Successfully pushed changes to GitHub via Git CLI.
+2026-10-15 22:01:24,188 [INFO] GitHub Auto-Sync status: Synced via Git CLI

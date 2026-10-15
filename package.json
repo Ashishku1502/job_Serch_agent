@@ -1,0 +1,8 @@
+{
+  "name": "ai-job-agent-command-center",
+  "version": "1.0.0",
+  "description": "Autonomous AI Job Application Command Center with Live Dashboard, Resume Tailoring & Outreach Dispatch",
+  "scripts": {
+    "dev": "python server.py"
+  }
+}
