@@ -456,3 +456,301 @@ Config: Query='Machine Learning Engineer', Location='Remote', MaxJobs=16, MinSco
 2026-10-15 20:48:31,618 [WARNING] Apify usage limit exceeded (status 403). Proceeding directly to Tier 2 live scraper.
 2026-10-15 20:48:31,618 [INFO] Attempting Tier 2: Real-time direct LinkedIn live scraper...
 2026-10-15 20:48:31,618 [INFO] Attempting direct live LinkedIn guest scraping for 'Machine Learning Engineer' in 'Remote'...
+2026-10-15 20:48:34,456 [INFO] Successfully retrieved 10 live job postings directly from LinkedIn guest endpoint.
+2026-10-15 20:48:34,466 [INFO] Filtering 10 jobs...
+2026-10-15 20:48:34,467 [INFO] 10 jobs passed the filter (score >= 60).
+2026-10-15 20:48:34,467 [INFO] Tailoring resume for: Machine Learning Engineer (Python) - Remote Work | REF#297197 at BairesDev
+2026-10-15 20:48:35,011 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,013 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Python - Remote Work  REF297197 - BairesDev.html
+2026-10-15 20:48:35,013 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,014 [ERROR] Failed to process job: Machine Learning Engineer (Python) - Remote Work | REF#297197
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,047 [INFO] Tailoring resume for: Machine Learning Engineer (Python) - Remote Work | REF#297202 at BairesDev
+2026-10-15 20:48:35,079 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,080 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Python - Remote Work  REF297202 - BairesDev.html
+2026-10-15 20:48:35,080 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,081 [ERROR] Failed to process job: Machine Learning Engineer (Python) - Remote Work | REF#297202
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,086 [INFO] Tailoring resume for: Senior Machine Learning Engineer at NewMind AI
+2026-10-15 20:48:35,128 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,129 [INFO] Saved local HTML resume to: output\Resume - Senior Machine Learning Engineer - NewMind AI.html
+2026-10-15 20:48:35,129 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,131 [ERROR] Failed to process job: Senior Machine Learning Engineer
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,137 [INFO] Tailoring resume for: Machine Learning Engineer 1 - UAE National at noon
+2026-10-15 20:48:35,164 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,165 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer 1 - UAE National - noon.html
+2026-10-15 20:48:35,168 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,169 [ERROR] Failed to process job: Machine Learning Engineer 1 - UAE National
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,176 [INFO] Tailoring resume for: Machine Learning Engineer at Cimri
+2026-10-15 20:48:35,204 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,205 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer - Cimri.html
+2026-10-15 20:48:35,206 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,209 [ERROR] Failed to process job: Machine Learning Engineer
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,214 [INFO] Tailoring resume for: Machine Learning Engineer, Radar at Stripe
+2026-10-15 20:48:35,248 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,249 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Radar - Stripe.html
+2026-10-15 20:48:35,250 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,250 [ERROR] Failed to process job: Machine Learning Engineer, Radar
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,262 [INFO] Tailoring resume for: Machine Learning Engineer (Decision Engine) at Trusting Social
+2026-10-15 20:48:35,290 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,297 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Decision Engine - Trusting Social.html
+2026-10-15 20:48:35,298 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,299 [ERROR] Failed to process job: Machine Learning Engineer (Decision Engine)
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,303 [INFO] Tailoring resume for: Machine Learning Engineer, Radar at Stripe
+2026-10-15 20:48:35,333 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,334 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer Radar - Stripe.html
+2026-10-15 20:48:35,334 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,335 [ERROR] Failed to process job: Machine Learning Engineer, Radar
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,340 [INFO] Tailoring resume for: Senior Machine Learning Engineer at OREDATA
+2026-10-15 20:48:35,370 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,371 [INFO] Saved local HTML resume to: output\Resume - Senior Machine Learning Engineer - OREDATA.html
+2026-10-15 20:48:35,371 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,372 [ERROR] Failed to process job: Senior Machine Learning Engineer
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,382 [INFO] Tailoring resume for: Machine Learning Engineer at videosdk.live
+2026-10-15 20:48:35,414 [WARNING] Google Drive doc creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Saving tailored resume locally in output/.
+2026-10-15 20:48:35,422 [INFO] Saved local HTML resume to: output\Resume - Machine Learning Engineer - videosdklive.html
+2026-10-15 20:48:35,423 [WARNING] Gmail draft creation unavailable (Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.). Logging outreach draft locally.
+2026-10-15 20:48:35,428 [ERROR] Failed to process job: Machine Learning Engineer
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 745, in draft_outreach_email
+    draft_id = create_gmail_draft(to=to_address, subject=subject, body=body)
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 61, in create_gmail_draft
+    service = _gmail_service()
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 56, in _gmail_service
+    return build("gmail", "v1", credentials=_get_credentials())
+                                            ~~~~~~~~~~~~~~~~^^
+  File "I:\Project\ai_job_agent\ai_job_agent\gmail_helper.py", line 41, in _get_credentials
+    raise FileNotFoundError(
+    ...<3 lines>...
+    )
+FileNotFoundError: Google OAuth credentials file 'credentials.json' not found. Please place your OAuth client secrets JSON file as 'credentials.json' or set GOOGLE_CREDENTIALS_FILE.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 901, in run_pipeline
+    draft_outreach_email(job, resume_doc, recruiter_email)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\Project\ai_job_agent\ai_job_agent\main.py", line 766, in draft_outreach_email
+    "htmlFile": local_rel_path or doc_link,
+                ^^^^^^^^^^^^^^
+NameError: name 'local_rel_path' is not defined
+2026-10-15 20:48:35,434 [INFO] Pipeline complete. Processed 10 job(s).
+2026-10-15 20:48:35,435 [INFO] Starting GitHub sync for 33 file(s) in output...
+2026-10-15 20:48:35,435 [INFO] GITHUB_TOKEN not set. Attempting sync via local Git CLI...
+2026-10-15 20:48:47,360 [INFO] Successfully pushed changes to GitHub via Git CLI.
+2026-10-15 20:48:47,360 [INFO] GitHub Auto-Sync status: Synced via Git CLI
